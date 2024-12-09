@@ -82,6 +82,8 @@ public class CubeManager : NetworkBehaviour
                 Debug.Log("Player 1 point");
                 scoreboardManager.UpdatePlayerScore(1);
                 hasScored.Value = true; // Set the flag to true after scoring
+                changeTimer = changeInterval; 
+                ChangeCubeColorToGreen();
             }
             else
             {
@@ -96,5 +98,7 @@ public class CubeManager : NetworkBehaviour
         Debug.Log("Player 2 point");
         scoreboardManager.UpdatePlayerScore(2);
         hasScored.Value = true; // Set the flag to true after scoring
+        changeTimer = changeInterval; 
+        ChangeCubeColorToGreen();
     }
 }

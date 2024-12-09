@@ -1,0 +1,67 @@
+{
+    "name": "CustomInputActions",
+    "maps": [
+        {
+            "name": "VRControls",
+            "id": "aaa29dfc-0d35-4f4c-b54d-391b6aa20faf",
+            "actions": [
+                {
+                    "name": "MenuButton",
+                    "type": "Button",
+                    "id": "82e59402-5d31-410e-b2cc-342550be8291",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "00fff975-bb78-4f93-8b65-d07bc93ce836",
+                    "path": "<OculusTouchController>{LeftHand}/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MenuButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "16161724-e49b-462d-85c2-3d125ff5c636",
+                    "path": "<XRController>/menuButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MenuButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6c690009-9dc8-424c-945e-4c313e03a9a5",
+                    "path": "<XRController>{LeftHand}/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MenuButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "92b17d51-19a6-497e-89d6-586df3c6b5d0",
+                    "path": "<XRSimulatedController>/menuButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MenuButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

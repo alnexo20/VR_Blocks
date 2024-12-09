@@ -12,6 +12,7 @@ public class ScoreboardManager : NetworkBehaviour
     public TextMeshProUGUI winnerText; // TextMeshPro Text to display the winner
     public NetworkVariable<int> player1Score = new NetworkVariable<int>(0); 
     public NetworkVariable<int> player2Score = new NetworkVariable<int>(0);
+    private int maxScore = 30;
 
     // Start is called before the first frame update
     void Start()
@@ -57,18 +58,32 @@ public class ScoreboardManager : NetworkBehaviour
 
         UpdateScoreText();
         
-        if (player1Score.Value >= 11 || player2Score.Value >= 11) { 
+        if (player1Score.Value >= maxScore || player2Score.Value >= maxScore) { 
             DisplayWinner(); 
         }
     }
 
     private void DisplayWinner()
     {
-        if (player1Score.Value >= 11)
+        if (player1Score.Value >= maxScore)
         {
             winnerText.text = "Player 1 Wins!";
         }
-        else if (player2Score.Value >= 11)
+        else if (player2Score.Value >= maxScore)
+        {
+            winnerText.text = "Player 2 Wins!";
+        }
+        DisplayWinnerClientRpc();
+    }
+
+    [ClientRpc]
+    private void DisplayWinnerClientRpc()
+    {
+        if (player1Score.Value >= maxScore)
+        {
+            winnerText.text = "Player 1 Wins!";
+        }
+        else if (player2Score.Value >= maxScore)
         {
             winnerText.text = "Player 2 Wins!";
         }

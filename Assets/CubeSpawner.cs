@@ -12,8 +12,14 @@ public class CubeSpawner : NetworkBehaviour
     {
         if (IsServer || IsHost)
         {
-            SpawnCubes();
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
         }
+    }
+
+    private void OnClientConnected(ulong clientId) { 
+        if (NetworkManager.Singleton.ConnectedClients.Count >= 2) { 
+            SpawnCubes(); 
+        } 
     }
 
     void SpawnCubes()
@@ -25,5 +31,11 @@ public class CubeSpawner : NetworkBehaviour
         GameObject newscoreboard = Instantiate(scoreboard, spawnPositionScoreBoard, Quaternion.identity);
         newscoreboard.GetComponent<NetworkObject>().Spawn();
         scoreboard.SetActive(true);
+    }
+
+    private void OnDestroy() { 
+        if (NetworkManager.Singleton != null) { 
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected; 
+        } 
     }
 }
