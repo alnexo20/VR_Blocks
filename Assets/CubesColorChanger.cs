@@ -14,6 +14,7 @@ public class CubeManager : NetworkBehaviour
     private Color originalColor;
     private NetworkVariable<bool> hasScored = new NetworkVariable<bool>(false); // Flag to track if a player has scored
     public ScoreboardManager scoreboardManager;
+    private int lastSelectedCubeIndex = -1;
 
     void Start()
     {
@@ -40,10 +41,7 @@ public class CubeManager : NetworkBehaviour
 
         if (changeTimer <= 0)
         {
-            ResetCubeColors();
-            ChangeCubeColorToGreen();
-            changeTimer = changeInterval;
-            hasScored.Value = false; // Reset the flag when the color changes
+            addOnePoint();
         }       
     }
 
@@ -57,7 +55,11 @@ public class CubeManager : NetworkBehaviour
 
     void ChangeCubeColorToGreen()
     {
-        int randomIndex = Random.Range(0, cubes.Length);
+        // This implementation is not really efficient but probability of repeating same number more than 5 times is <<<
+        int randomIndex;
+        do{
+            randomIndex = Random.Range(0, cubes.Length);
+        } while(randomIndex == lastSelectedCubeIndex);
         Renderer cubeRenderer = cubes[randomIndex].GetComponent<Renderer>();
         cubeRenderer.material.color = Color.green;
         ChangeCubeColorClientRpc(randomIndex);
@@ -72,6 +74,13 @@ public class CubeManager : NetworkBehaviour
         } 
     }
 
+    void addOnePoint(){
+        ResetCubeColors();
+        ChangeCubeColorToGreen();
+        changeTimer = changeInterval;
+        hasScored.Value = false; // Reset the flag when the color changes
+    }
+
     public void CheckCubeSelection(GameObject selectedCube)
     {
         // Check if a point has been scored
@@ -82,8 +91,7 @@ public class CubeManager : NetworkBehaviour
                 Debug.Log("Player 1 point");
                 scoreboardManager.UpdatePlayerScore(1);
                 hasScored.Value = true; // Set the flag to true after scoring
-                changeTimer = changeInterval; 
-                ChangeCubeColorToGreen();
+                addOnePoint();
             }
             else
             {
@@ -98,7 +106,6 @@ public class CubeManager : NetworkBehaviour
         Debug.Log("Player 2 point");
         scoreboardManager.UpdatePlayerScore(2);
         hasScored.Value = true; // Set the flag to true after scoring
-        changeTimer = changeInterval; 
-        ChangeCubeColorToGreen();
+        addOnePoint();
     }
 }

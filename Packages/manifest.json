@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.animation.rigging": "1.2.1",
     "com.unity.burst": "1.8.17",
     "com.unity.collab-proxy": "2.4.4",
     "com.unity.feature.development": "1.0.1",
@@ -10,7 +11,7 @@
     "com.unity.services.relay": "1.0.5",
     "com.unity.services.vivox": "16.4.0",
     "com.unity.textmeshpro": "3.0.9",
-    "com.unity.transport": "2.3.0",
+    "com.unity.transport": "2.4.0",
     "com.unity.xr.hands": "1.4.1",
     "com.unity.xr.interaction.toolkit": "3.0.5",
     "com.unity.xr.management": "4.5.0",

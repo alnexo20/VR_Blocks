@@ -7,6 +7,7 @@ public class CubeSpawner : NetworkBehaviour
     public Vector3 spawnPosition = Vector3.zero; // Position to spawn the prefab
     public GameObject scoreboard;
     public Vector3 spawnPositionScoreBoard = Vector3.zero;
+    private int minPlayers = 2;
 
     public override void OnNetworkSpawn()
     {
@@ -17,7 +18,7 @@ public class CubeSpawner : NetworkBehaviour
     }
 
     private void OnClientConnected(ulong clientId) { 
-        if (NetworkManager.Singleton.ConnectedClients.Count >= 2) { 
+        if (NetworkManager.Singleton.ConnectedClients.Count >= minPlayers) { 
             SpawnCubes(); 
         } 
     }

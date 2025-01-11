@@ -11,8 +11,8 @@ public class GameStartMenu : MonoBehaviour
 
     [Header("Main Menu Buttons")]
     public Button startButton;
-    public Button optionButton;
-    public Button aboutButton;
+    public Button joinButton;
+    public Button serverButton;
     public Button quitButton;
 
     // Start is called before the first frame update
@@ -21,18 +21,15 @@ public class GameStartMenu : MonoBehaviour
         EnableMainMenu();
 
         //Hook events
-        startButton.onClick.AddListener(StartGame);
+        startButton.onClick.AddListener(HideAll);
+        joinButton.onClick.AddListener(HideAll);
+        serverButton.onClick.AddListener(HideAll);
         quitButton.onClick.AddListener(QuitGame);
     }
 
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    public void StartGame()
-    {
-        HideAll();
     }
 
     public void HideAll()

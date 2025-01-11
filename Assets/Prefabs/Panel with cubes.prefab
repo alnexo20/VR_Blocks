@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1400452528
+  GlobalObjectIdHash: 352942878
   InScenePlacedSourceGlobalObjectIdHash: 2779433461
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -86,7 +86,7 @@ MonoBehaviour:
   - {fileID: 7255430651462648487}
   - {fileID: 5347323748303858931}
   changeInterval: 5
-  scoreboardManager: {fileID: 460953003301960622, guid: d2df3c83747e92d44ab662aa98899077,
+  scoreboardManager: {fileID: 2683571751845575509, guid: 671d756014aebe144884ecc0eb543dda,
     type: 3}
 --- !u!1001 &849901156704603779
 PrefabInstance:

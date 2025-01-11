@@ -19,14 +19,17 @@ public class NetworkConnect : MonoBehaviour
     }
 
     public void StartServer(){
+        NetworkManager.Singleton.Shutdown();
         NetworkManager.Singleton.StartServer();
     }
 
     public void Create() { 
+        NetworkManager.Singleton.Shutdown();
         NetworkManager.Singleton.StartHost();
     }
 
     public void Join() {
+        NetworkManager.Singleton.Shutdown();
         NetworkManager.Singleton.StartClient(); 
     }
 
