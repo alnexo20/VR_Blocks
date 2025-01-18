@@ -7,19 +7,9 @@ using UnityEngine.InputSystem;
 public class ShowOptions : MonoBehaviour
 {
     public InputActionProperty menuButtonAction;
-    private GameObject optionsMenu;
-    GameObject startMenu;
+    public GameObject optionsMenu;
     public Transform head;
     public float spawnDist = 2;
-
-    void Awake()
-    {
-        optionsMenu = gameObject;
-    }
-
-    void Start(){
-
-    }
 
     void Update(){
         if (menuButtonAction.action.WasPressedThisFrame()){
@@ -37,8 +27,7 @@ public class ShowOptions : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        startMenu.SetActive(true);
         optionsMenu.SetActive(false);
-        NetworkManager.Singleton.DisconnectClient(NetworkManager.Singleton.LocalClientId);
+        NetworkManager.Singleton.Shutdown();
     }
 }

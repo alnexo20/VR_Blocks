@@ -41,5 +41,6 @@ public class GameStartMenu : MonoBehaviour
     public void EnableMainMenu()
     {
         mainMenu.SetActive(true);
+        title.SetActive(true);
     }
 }

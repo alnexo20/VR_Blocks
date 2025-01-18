@@ -34,7 +34,7 @@ public class CubeSpawner : NetworkBehaviour
         scoreboard.SetActive(true);
     }
 
-    private void OnDestroy() { 
+    public override void OnDestroy() { 
         if (NetworkManager.Singleton != null) { 
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected; 
         } 

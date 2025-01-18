@@ -75,6 +75,7 @@ public class CubeManager : NetworkBehaviour
     }
 
     void addOnePoint(){
+        hasScored.Value = true; // Set the flag to true after scoring
         ResetCubeColors();
         ChangeCubeColorToGreen();
         changeTimer = changeInterval;
@@ -90,7 +91,6 @@ public class CubeManager : NetworkBehaviour
             {
                 Debug.Log("Player 1 point");
                 scoreboardManager.UpdatePlayerScore(1);
-                hasScored.Value = true; // Set the flag to true after scoring
                 addOnePoint();
             }
             else
@@ -105,7 +105,6 @@ public class CubeManager : NetworkBehaviour
     private void RequestScoreUpdateServerRpc(){
         Debug.Log("Player 2 point");
         scoreboardManager.UpdatePlayerScore(2);
-        hasScored.Value = true; // Set the flag to true after scoring
         addOnePoint();
     }
 }

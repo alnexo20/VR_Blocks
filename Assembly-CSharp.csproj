@@ -65,11 +65,10 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.16f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\NetworkSpawnPlayers.cs" />
-    <Compile Include="Assets\ShowOptions.cs" />
+    <Compile Include="Assets\Scripts\CubesColorChanger.cs" />
+    <Compile Include="Assets\Scripts\ScoreboardManager.cs" />
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\SymbolKeyboard.cs" />
     <Compile Include="Assets\Scripts\ButtonFunctions.cs" />
-    <Compile Include="Assets\NetworkConnect.cs" />
     <Compile Include="Assets\Scripts\SceneTransitionManager.cs" />
     <Compile Include="Assets\Scripts\Relay.cs" />
     <Compile Include="Assets\VR Body\AnimateOnInput.cs" />
@@ -80,20 +79,21 @@
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\SymbolDisableHighlight.cs" />
     <Compile Include="Assets\Scripts\GameStartMenu.cs" />
-    <Compile Include="Assets\CubesColorChanger.cs" />
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\KeyboardKeyFunc.cs" />
-    <Compile Include="Assets\ShowKeyboard.cs" />
-    <Compile Include="Assets\ScoreboardManager.cs" />
+    <Compile Include="Assets\Scripts\CubeSpawner.cs" />
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\UICollection.cs" />
+    <Compile Include="Assets\Scripts\NetworkConnect.cs" />
+    <Compile Include="Assets\Scripts\ShowOptions.cs" />
     <Compile Include="Assets\VR Body\IKTargetFollowVRRig.cs" />
     <Compile Include="Assets\Scripts\UIAudio.cs" />
     <Compile Include="Assets\VR Body\IKFootSolver.cs" />
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\KeyboardValueKey.cs" />
     <Compile Include="Assets\Scripts\PlayAudioFromAudioManager.cs" />
+    <Compile Include="Assets\Scripts\ShowKeyboard.cs" />
+    <Compile Include="Assets\OptionsNetworkStats.cs" />
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\NonNativeKeyboard.cs" />
     <Compile Include="Assets\Scripts\NetworkPlayer.cs" />
     <Compile Include="Assets\Scripts\FadeScreen.cs" />
-    <Compile Include="Assets\CubeSpawner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
