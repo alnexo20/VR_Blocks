@@ -45,7 +45,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         SendPingServerRpc(); 
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     void SendPingServerRpc(ServerRpcParams rpcParams = default)
     {
         SendPongClientRpc();
