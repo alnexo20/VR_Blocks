@@ -86,6 +86,7 @@
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\KeyboardValueKey.cs" />
     <Compile Include="Assets\Scripts\PlayAudioFromAudioManager.cs" />
     <Compile Include="Assets\Scripts\ShowKeyboard.cs" />
+    <Compile Include="Assets\Get_IP_Address.cs" />
     <Compile Include="Assets\Scripts\OptionsNetworkStats.cs" />
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\NonNativeKeyboard.cs" />
     <Compile Include="Assets\Scripts\NetworkPlayer.cs" />

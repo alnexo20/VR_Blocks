@@ -13,9 +13,9 @@ public class CubeSpawner : NetworkBehaviour
     public GameObject WinnerMenu;
     private GameObject optionsMenu;
 
-    void Start(){
-        optionsMenu = GameObject.FindGameObjectWithTag("Options Menu").GetComponent<GameObject>();
-    }
+    // void Start(){
+    //     optionsMenu = GameObject.FindGameObjectWithTag("Options Menu").GetComponent<GameObject>();
+    // }
 
     public override void OnNetworkSpawn()
     {
@@ -23,6 +23,7 @@ public class CubeSpawner : NetworkBehaviour
         {
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
         }
+        optionsMenu = GameObject.FindGameObjectWithTag("Options Menu").GetComponent<GameObject>();
     }
 
     private void OnClientConnected(ulong clientId) { 
