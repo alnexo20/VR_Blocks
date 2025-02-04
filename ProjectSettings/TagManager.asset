@@ -9,6 +9,7 @@ TagManager:
   - Anchor
   - PlayerHand
   - Destroyer
+  - Options Menu
   layers:
   - Default
   - TransparentFX

@@ -15,6 +15,7 @@ public class CubeManager : NetworkBehaviour
     private NetworkVariable<bool> hasScored = new NetworkVariable<bool>(false); // Flag to track if a player has scored
     public ScoreboardManager scoreboardManager;
     private int lastSelectedCubeIndex = -1;
+    private int currentGreenCube = -1;
 
     void Start()
     {
@@ -56,13 +57,12 @@ public class CubeManager : NetworkBehaviour
     void ChangeCubeColorToGreen()
     {
         // This implementation is not really efficient but probability of repeating same number more than 5 times is <<<
-        int randomIndex;
         do{
-            randomIndex = Random.Range(0, cubes.Length);
-        } while(randomIndex == lastSelectedCubeIndex);
-        Renderer cubeRenderer = cubes[randomIndex].GetComponent<Renderer>();
+            currentGreenCube = Random.Range(0, cubes.Length);
+        } while(currentGreenCube == lastSelectedCubeIndex);
+        Renderer cubeRenderer = cubes[currentGreenCube].GetComponent<Renderer>();
         cubeRenderer.material.color = Color.green;
-        ChangeCubeColorClientRpc(randomIndex);
+        ChangeCubeColorClientRpc(currentGreenCube);
     }
 
     [ClientRpc] 
@@ -84,27 +84,20 @@ public class CubeManager : NetworkBehaviour
 
     public void CheckCubeSelection(GameObject selectedCube)
     {
-        // Check if a point has been scored
-        if (selectedCube.GetComponent<Renderer>().material.color == Color.green && !hasScored.Value){
-            // if host or server scored a point then update
-            if (IsHost || IsServer)
-            {
-                Debug.Log("Player 1 point");
-                scoreboardManager.UpdatePlayerScore(1);
-                addOnePoint();
-            }
-            else
-            {
-                //if client scored call server to update score as this is not server autoritative
-                RequestScoreUpdateServerRpc();
-            }
-        }
+        ulong localClientId = NetworkManager.Singleton.LocalClientId;
+        //Server and other players connected cannot play
+        if (IsServer || localClientId >= 2) return;
+
+        //if client scored call server to update score as this is not server autoritative
+        RequestScoreUpdateServerRpc(selectedCube.name, cubes[currentGreenCube].name);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestScoreUpdateServerRpc(){
-        Debug.Log("Player 2 point");
-        scoreboardManager.UpdatePlayerScore(2);
-        addOnePoint();
+    private void RequestScoreUpdateServerRpc(string selectedCube, string greenCube, ServerRpcParams rpcParams = default){
+        // Check if a point has been scored
+        if (selectedCube == greenCube && selectedCube == cubes[currentGreenCube].name && !hasScored.Value){
+            scoreboardManager.UpdatePlayerScore(rpcParams.Receive.SenderClientId);
+            addOnePoint();
+        }
     }
 }

@@ -13,11 +13,13 @@ public class ScoreboardManager : NetworkBehaviour
     public NetworkVariable<int> player1Score = new NetworkVariable<int>(0); 
     public NetworkVariable<int> player2Score = new NetworkVariable<int>(0);
     private int maxScore = 30;
+    CubeSpawner cubeSpawner;
 
     // Start is called before the first frame update
     void Start()
     {
         this.gameObject.SetActive(true);
+        cubeSpawner = GameObject.FindGameObjectWithTag("Cube Spawner").GetComponent<CubeSpawner>();
     }
 
     public override void OnNetworkSpawn() { 
@@ -49,22 +51,28 @@ public class ScoreboardManager : NetworkBehaviour
         player2ScoreText.text = "Player 2 Score: " + player2Score.Value.ToString();
     }
 
-    public void UpdatePlayerScore(int playerId){
-        if (playerId == 1){
+    public void UpdatePlayerScore(ulong playerId){
+        ulong player_1 = 0;
+        ulong player_2 = 1;
+        if (playerId == player_1){
             player1Score.Value++;
-        }else if (playerId == 2){
+        }else if (playerId == player_2){
             player2Score.Value++;
+        }else{
+            Debug.Log("Ghost has scored 1 point");
         }
 
         UpdateScoreText();
         
         if (player1Score.Value >= maxScore || player2Score.Value >= maxScore) { 
-            DisplayWinner(); 
+            cubeSpawner.WinnerScreen();
         }
     }
 
+    // Unused functions below
     private void DisplayWinner()
     {
+        
         if (player1Score.Value >= maxScore)
         {
             winnerText.text = "Player 1 Wins!";

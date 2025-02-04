@@ -480,7 +480,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 3846044035532585010}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ShowOptions, Assembly-CSharp
         m_MethodName: BackToMainMenu
         m_Mode: 1
@@ -740,7 +740,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6235459327400853464}
-  - component: {fileID: 3846044035532585010}
   - component: {fileID: 4655629143364176062}
   - component: {fileID: 6529503213309045658}
   m_Layer: 0
@@ -766,34 +765,6 @@ Transform:
   - {fileID: 639052945347606462}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3846044035532585010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5488373100082662776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d341d1b355daff04c9138d5d5c1a03cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  menuButtonAction:
-    m_UseReference: 1
-    m_Action:
-      m_Name: Menu Button
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: 1dbfd9e5-27a8-444d-a45d-055dcbf95a95
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings: []
-      m_Flags: 0
-    m_Reference: {fileID: 8014254974754979394, guid: c348712bda248c246b8c49b3db54643f,
-      type: 3}
-  optionsMenu: {fileID: 5026744507762642177}
-  head: {fileID: 0}
-  spawnDist: 1
 --- !u!114 &4655629143364176062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -806,7 +777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1906409387
+  GlobalObjectIdHash: 381860233
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -836,7 +807,6 @@ MonoBehaviour:
     m_InternalValue: 0
   jitter:
     m_InternalValue: 0
-  calculatedLatency: 0
 --- !u!1 &7133194680920419022
 GameObject:
   m_ObjectHideFlags: 0
