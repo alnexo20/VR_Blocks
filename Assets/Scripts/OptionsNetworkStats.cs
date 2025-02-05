@@ -14,9 +14,9 @@ public class OptionsNetworkStats : NetworkBehaviour
     public TextMeshProUGUI latencyText;
     public TextMeshProUGUI packetLossText;
     public TextMeshProUGUI jitterText;
-    public NetworkVariable<float> latency = new NetworkVariable<float>(0f);
-    public NetworkVariable<float> packetLoss = new NetworkVariable<float>(0f);
-    public NetworkVariable<float> jitter = new NetworkVariable<float>(0f);
+    public float latency = 0f;
+    public float packetLoss = 0f;
+    public float jitter = 0f;
     private Stopwatch stopwatch;
     private int sentPackets;
     private int receivedPackets;
@@ -55,17 +55,15 @@ public class OptionsNetworkStats : NetworkBehaviour
     {
         sentPackets = 0;
         receivedPackets = 0;
+        networkStats = new NetworkStats();
     }
 
     public override void OnNetworkSpawn()
     {
         optionsMenu.SetActive(true);
-        latency.Value = 0;
-        packetLoss.Value = 0;
-        jitter.Value = 0;
-        latency.OnValueChanged += OnLatencyChanged;
-        packetLoss.OnValueChanged += OnPacketLossChanged;
-        jitter.OnValueChanged += OnJitterChanged;
+        latency = 0;
+        packetLoss = 0;
+        jitter = 0;
 
         if (IsServer || IsHost){
             stopwatch = new Stopwatch();
@@ -81,9 +79,6 @@ public class OptionsNetworkStats : NetworkBehaviour
         while (true)
         {
             SendPingServerRpc();
-            CalculatePacketLoss();
-            CalculateAvgJitter();
-            UpdateNetworkStatsText();
             yield return new WaitForSeconds(1/90); // Adjust the interval as needed
         }
     }
@@ -106,10 +101,15 @@ public class OptionsNetworkStats : NetworkBehaviour
     {
         // Calculate Latency, packet loss and jitter
         stopwatch.Stop();
-        latency.Value = stopwatch.ElapsedMilliseconds;
+        latency = stopwatch.ElapsedMilliseconds;
         receivedPackets++;
-        packetDelays.Add(latency.Value);
+        packetDelays.Add(latency);
+        CalculatePacketLoss();
+        CalculateAvgJitter();
         stopwatch.Reset();
+
+        // Update UI text in game
+        UpdateNetworkStatsText();
 
         // Store calculated values
         string clientKey = $"Client_{rpcParams.Receive.SenderClientId}";
@@ -126,9 +126,9 @@ public class OptionsNetworkStats : NetworkBehaviour
         }
 
         var clientStats = networkStats.serverTimestamps[currentTimestamp][clientKey];
-        clientStats.latency = $"{latency.Value}ms";
-        clientStats.packetLoss = $"{packetLoss.Value}%";
-        clientStats.jitter = $"{jitter.Value}ms";
+        clientStats.latency = $"{latency}ms";
+        clientStats.packetLoss = $"{packetLoss}%";
+        clientStats.jitter = $"{jitter}ms";
         clientStats.score = 0; // Replace with actual score value
 
         // Example input data
@@ -146,7 +146,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     {
         if (sentPackets > 0)
         {
-            packetLoss.Value = (float)(sentPackets - receivedPackets) / sentPackets * 100;
+            packetLoss = (float)(sentPackets - receivedPackets) / sentPackets * 100;
         }
     }
 
@@ -159,7 +159,7 @@ public class OptionsNetworkStats : NetworkBehaviour
             {
                 jitterSum += Mathf.Abs(packetDelays[i] - packetDelays[i - 1]);
             }
-            jitter.Value = jitterSum / (packetDelays.Count - 1);
+            jitter = jitterSum / (packetDelays.Count - 1);
         }
     }
 
@@ -184,39 +184,14 @@ public class OptionsNetworkStats : NetworkBehaviour
 
     private void CreateFile()
     {
-        networkStats = new NetworkStats();
         File.WriteAllText(filePath, JsonConvert.SerializeObject(networkStats, Formatting.Indented));
-    }
-
-    private void OnLatencyChanged(float oldValue, float newValue)
-    {
-        latencyText.text = "Latency: " + newValue.ToString() + "ms";
-    }
-
-    private void OnPacketLossChanged(float oldValue, float newValue)
-    {
-        packetLossText.text = "Packet Loss: " + newValue.ToString() + "%";
-    }
-
-    private void OnJitterChanged(float oldValue, float newValue)
-    {
-        jitterText.text = "Jitter: " + newValue.ToString() + "ms";
     }
 
     private void UpdateNetworkStatsText()
     {
-        latencyText.text = "Latency: " + latency.Value.ToString() + "ms";
-        packetLossText.text = "Packet Loss: " + packetLoss.Value.ToString() + "%";
-        jitterText.text = "Jitter: " + jitter.Value.ToString() + "ms";
-        UpdateNetworkStatsTextClientRpc();
-    }
-
-    [ClientRpc]
-    private void UpdateNetworkStatsTextClientRpc()
-    {
-        latencyText.text = "Latency: " + latency.Value.ToString() + "ms";
-        packetLossText.text = "Packet Loss: " + packetLoss.Value.ToString() + "%";
-        jitterText.text = "Jitter: " + jitter.Value.ToString() + "ms";
+        latencyText.text = "Latency: " + latency.ToString() + "ms";
+        packetLossText.text = "Packet Loss: " + packetLoss.ToString() + "%";
+        jitterText.text = "Jitter: " + jitter.ToString() + "ms";
     }
 
     public void BackToMainMenu()

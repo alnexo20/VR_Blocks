@@ -15,7 +15,7 @@ public class CubeManager : NetworkBehaviour
     private NetworkVariable<bool> hasScored = new NetworkVariable<bool>(false); // Flag to track if a player has scored
     public ScoreboardManager scoreboardManager;
     private int lastSelectedCubeIndex = -1;
-    private int currentGreenCube = -1;
+    private NetworkVariable<int> currentGreenCube = new NetworkVariable<int>(-1);
 
     void Start()
     {
@@ -58,11 +58,11 @@ public class CubeManager : NetworkBehaviour
     {
         // This implementation is not really efficient but probability of repeating same number more than 5 times is <<<
         do{
-            currentGreenCube = Random.Range(0, cubes.Length);
-        } while(currentGreenCube == lastSelectedCubeIndex);
-        Renderer cubeRenderer = cubes[currentGreenCube].GetComponent<Renderer>();
+            currentGreenCube.Value = Random.Range(0, cubes.Length);
+        } while(currentGreenCube.Value == lastSelectedCubeIndex);
+        Renderer cubeRenderer = cubes[currentGreenCube.Value].GetComponent<Renderer>();
         cubeRenderer.material.color = Color.green;
-        ChangeCubeColorClientRpc(currentGreenCube);
+        ChangeCubeColorClientRpc(currentGreenCube.Value);
     }
 
     [ClientRpc] 
@@ -89,13 +89,13 @@ public class CubeManager : NetworkBehaviour
         if (IsServer || localClientId >= 2) return;
 
         //if client scored call server to update score as this is not server autoritative
-        RequestScoreUpdateServerRpc(selectedCube.name, cubes[currentGreenCube].name);
+        RequestScoreUpdateServerRpc(selectedCube.name, cubes[currentGreenCube.Value].name);
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void RequestScoreUpdateServerRpc(string selectedCube, string greenCube, ServerRpcParams rpcParams = default){
         // Check if a point has been scored
-        if (selectedCube == greenCube && selectedCube == cubes[currentGreenCube].name && !hasScored.Value){
+        if (selectedCube == greenCube && selectedCube == cubes[currentGreenCube.Value].name && !hasScored.Value){
             scoreboardManager.UpdatePlayerScore(rpcParams.Receive.SenderClientId);
             addOnePoint();
         }

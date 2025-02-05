@@ -11,7 +11,7 @@ public class CubeSpawner : NetworkBehaviour
     public Vector3 spawnPositionScoreBoard = Vector3.zero;
     private int minPlayers = 2;
     public GameObject WinnerMenu;
-    private GameObject optionsMenu;
+    GameObject optionsMenu;
 
     // void Start(){
     //     optionsMenu = GameObject.FindGameObjectWithTag("Options Menu").GetComponent<GameObject>();
@@ -24,6 +24,11 @@ public class CubeSpawner : NetworkBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
         }
         optionsMenu = GameObject.FindGameObjectWithTag("Options Menu").GetComponent<GameObject>();
+        if (optionsMenu == null)
+        {
+            Debug.LogError("Options Menu GameObject with tag 'Options Menu' not found");
+            return;
+        }
     }
 
     private void OnClientConnected(ulong clientId) { 
@@ -34,13 +39,41 @@ public class CubeSpawner : NetworkBehaviour
 
     void SpawnCubes()
     {
-        cubes = Instantiate(cubesPrefab, spawnPosition, Quaternion.identity);
-        cubes.GetComponent<NetworkObject>().Spawn();
-        cubes.SetActive(true);
-        cubesPrefab.SetActive(true);
-        scoreboard = Instantiate(scoreboardPrefab, spawnPositionScoreBoard, Quaternion.identity);
-        scoreboard.GetComponent<NetworkObject>().Spawn();
-        scoreboard.SetActive(true);
+        if (cubesPrefab != null)
+        {
+            cubes = Instantiate(cubesPrefab, spawnPosition, Quaternion.identity);
+            var networkObject = cubes.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                networkObject.Spawn();
+            }
+            else
+            {
+                Debug.LogError("NetworkObject component not found on cubesPrefab");
+            }
+        }
+        else
+        {
+            Debug.LogError("cubesPrefab is not assigned");
+        }
+
+        if (scoreboardPrefab != null)
+        {
+            scoreboard = Instantiate(scoreboardPrefab, spawnPositionScoreBoard, Quaternion.identity);
+            var networkObject = scoreboard.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                networkObject.Spawn();
+            }
+            else
+            {
+                Debug.LogError("NetworkObject component not found on scoreboardPrefab");
+            }
+        }
+        else
+        {
+            Debug.LogError("scoreboardPrefab is not assigned");
+        }
     }
 
     public override void OnDestroy() { 
@@ -49,15 +82,35 @@ public class CubeSpawner : NetworkBehaviour
         } 
     }
 
-    public void WinnerScreen(){
-        // Despawn cubes
-        cubes.GetComponent<NetworkObject>().Despawn();
-        cubes.SetActive(false);
-        // Hide Scoreboard
-        scoreboard.SetActive(false);
-        // Hide options Menu
-        optionsMenu.SetActive(false);
-        // Show Winner Menu
-        WinnerMenu.SetActive(true);
+    public void WinnerScreen()
+    {
+        if (cubes != null)
+        {
+            var networkObject = cubes.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                networkObject.Despawn();
+                cubes.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("NetworkObject component not found on cubes");
+            }
+        }
+
+        if (scoreboard != null)
+        {
+            scoreboard.SetActive(false);
+        }
+
+        if (optionsMenu != null)
+        {
+            optionsMenu.SetActive(false);
+        }
+
+        if (WinnerMenu != null)
+        {
+            WinnerMenu.SetActive(true);
+        }
     }
 }
