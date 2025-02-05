@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 public class CubeSpawner : NetworkBehaviour
 {
@@ -11,23 +12,13 @@ public class CubeSpawner : NetworkBehaviour
     public Vector3 spawnPositionScoreBoard = Vector3.zero;
     private int minPlayers = 2;
     public GameObject WinnerMenu;
-    GameObject optionsMenu;
-
-    // void Start(){
-    //     optionsMenu = GameObject.FindGameObjectWithTag("Options Menu").GetComponent<GameObject>();
-    // }
+    public GameObject optionsMenu;
 
     public override void OnNetworkSpawn()
     {
         if (IsServer || IsHost)
         {
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-        }
-        optionsMenu = GameObject.FindGameObjectWithTag("Options Menu").GetComponent<GameObject>();
-        if (optionsMenu == null)
-        {
-            Debug.LogError("Options Menu GameObject with tag 'Options Menu' not found");
-            return;
         }
     }
 
@@ -83,6 +74,40 @@ public class CubeSpawner : NetworkBehaviour
     }
 
     public void WinnerScreen()
+    {
+        WinnerScreenClientRpc();
+        if (cubes != null)
+        {
+            var networkObject = cubes.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                networkObject.Despawn();
+                cubes.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("NetworkObject component not found on cubes");
+            }
+        }
+
+        if (scoreboard != null)
+        {
+            scoreboard.SetActive(false);
+        }
+
+        if (optionsMenu != null)
+        {
+            optionsMenu.SetActive(false);
+        }
+
+        if (WinnerMenu != null)
+        {
+            WinnerMenu.SetActive(true);
+        }
+    }
+
+    [ClientRpc]
+    private void WinnerScreenClientRpc()
     {
         if (cubes != null)
         {

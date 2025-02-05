@@ -83,6 +83,7 @@
     <Compile Include="Assets\VR Body\IKTargetFollowVRRig.cs" />
     <Compile Include="Assets\Scripts\UIAudio.cs" />
     <Compile Include="Assets\VR Body\IKFootSolver.cs" />
+    <Compile Include="Assets\WinnerMenuManager.cs" />
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\KeyboardValueKey.cs" />
     <Compile Include="Assets\Scripts\PlayAudioFromAudioManager.cs" />
     <Compile Include="Assets\Scripts\ShowKeyboard.cs" />

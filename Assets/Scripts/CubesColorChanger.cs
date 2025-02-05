@@ -86,7 +86,7 @@ public class CubeManager : NetworkBehaviour
     {
         ulong localClientId = NetworkManager.Singleton.LocalClientId;
         //Server and other players connected cannot play
-        if (IsServer || localClientId >= 2) return;
+        if ((IsServer && !IsHost) || localClientId >= 2) return;
 
         //if client scored call server to update score as this is not server autoritative
         RequestScoreUpdateServerRpc(selectedCube.name, cubes[currentGreenCube.Value].name);

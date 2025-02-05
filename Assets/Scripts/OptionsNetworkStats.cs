@@ -22,7 +22,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     private int receivedPackets;
     private List<float> packetDelays = new List<float>();
     private string filePath;
-    private const long MaxFileSize = 5 * 1024 * 1024; // 5 MB size limit
+    private const long MaxFileSize = 512 * 1024 * 1024; // 500 MB size limit
 
 
     [Serializable]
@@ -88,7 +88,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         SendPongServerRpc(); 
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     void SendPingServerRpc(ServerRpcParams rpcParams = default)
     {
         stopwatch.Start(); 
@@ -96,7 +96,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         sentPackets++;
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     void SendPongServerRpc(ServerRpcParams rpcParams = default)
     {
         // Calculate Latency, packet loss and jitter
