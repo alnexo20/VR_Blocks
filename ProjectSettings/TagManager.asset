@@ -11,6 +11,10 @@ TagManager:
   - Destroyer
   - Options Menu
   - Cube Spawner
+  - Scoreboard
+  - HeadVRTarget
+  - LeftHandVRTarget
+  - RightHandVRTarget
   layers:
   - Default
   - TransparentFX

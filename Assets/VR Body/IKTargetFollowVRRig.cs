@@ -1,39 +1,44 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
-[System.Serializable]
-public class VRMap
-{
-    public Transform vrTarget;
-    public Transform ikTarget;
-    public Vector3 trackingPositionOffset;
-    public Vector3 trackingRotationOffset;
-    public void Map()
-    {
-        ikTarget.position = vrTarget.TransformPoint(trackingPositionOffset);
-        ikTarget.rotation = vrTarget.rotation * Quaternion.Euler(trackingRotationOffset);
-    }
-}
-
-public class IKTargetFollowVRRig : MonoBehaviour
+public class IKTargetFollowVRRig : NetworkBehaviour
 {
     [Range(0,1)]
     public float turnSmoothness = 0.1f;
-    public VRMap head;
-    public VRMap leftHand;
-    public VRMap rightHand;
 
     public Vector3 headBodyPositionOffset;
     public float headBodyYawOffset;
+    Transform headTarget;
+    Transform leftHandTarget;
+    Transform rightHandTarget;
+    public Transform HeadIKTarget;
+    public Transform LeftIKTarget;
+    public Transform RightIKTarget;
+
+    public override void OnNetworkSpawn()
+    {
+        headTarget = GameObject.FindGameObjectWithTag("HeadVRTarget").GetComponent<Transform>();
+        leftHandTarget = GameObject.FindGameObjectWithTag("LeftHandVRTarget").GetComponent<Transform>();
+        rightHandTarget = GameObject.FindGameObjectWithTag("RightHandVRTarget").GetComponent<Transform>();
+    }
 
     // Update is called once per frame
     void LateUpdate()
     {
-        transform.position = head.ikTarget.position + headBodyPositionOffset;
-        float yaw = head.vrTarget.eulerAngles.y;
+        transform.position = HeadIKTarget.position + headBodyPositionOffset;
+        float yaw = headTarget.eulerAngles.y;
         transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.Euler(transform.eulerAngles.x, yaw, transform.eulerAngles.z),turnSmoothness);
 
-        head.Map();
-        leftHand.Map();
-        rightHand.Map();
+        Map();
+    }
+
+    public void Map()
+    {
+        HeadIKTarget.position = headTarget.TransformPoint(new Vector3(0,0,0));
+        HeadIKTarget.rotation = headTarget.rotation * Quaternion.Euler(new Vector3(0,0,0));
+        LeftIKTarget.position = leftHandTarget.TransformPoint(new Vector3(0,0,0));
+        LeftIKTarget.rotation = leftHandTarget.rotation * Quaternion.Euler(new Vector3(90,0,0));
+        RightIKTarget.position = rightHandTarget.TransformPoint(new Vector3(0,0,0));
+        RightIKTarget.rotation = rightHandTarget.rotation * Quaternion.Euler(new Vector3(90,0,0));
     }
 }
