@@ -29,6 +29,10 @@ public class ScoreboardManager : NetworkBehaviour
         player2Score.OnValueChanged += OnPlayer2ScoreChanged; 
 
     } 
+
+    public int[] getScores(){
+        return new int[]{player1Score.Value, player2Score.Value};
+    }
     
     private void OnPlayer1ScoreChanged(int oldValue, int newValue) { 
         player1ScoreText.text = "Player 1 Score: " + newValue.ToString(); 

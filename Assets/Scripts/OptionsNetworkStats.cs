@@ -23,6 +23,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     private List<float> packetDelays = new List<float>();
     private string filePath;
     private const long MaxFileSize = 512 * 1024 * 1024; // 500 MB size limit
+    ScoreboardManager scoreboardManager;
 
 
     [Serializable]
@@ -32,7 +33,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         public string packetLoss;
         public string jitter;
         public int score;
-        public List<InputData> inputs = new List<InputData>();
+        // public List<InputData> inputs = new List<InputData>();
     }
 
     [Serializable]
@@ -56,6 +57,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         sentPackets = 0;
         receivedPackets = 0;
         networkStats = new NetworkStats();
+        scoreboardManager = GameObject.FindGameObjectWithTag("Scoreboard").GetComponent<ScoreboardManager>();
     }
 
     public override void OnNetworkSpawn()
@@ -79,7 +81,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         while (true)
         {
             SendPingServerRpc();
-            yield return new WaitForSeconds(1/90); // Adjust the interval as needed
+            yield return new WaitForSeconds(1/3); // Adjust the interval as needed
         }
     }
 
@@ -115,28 +117,21 @@ public class OptionsNetworkStats : NetworkBehaviour
         string clientKey = $"Client_{rpcParams.Receive.SenderClientId}";
         string currentTimestamp = DateTime.UtcNow.ToString("o");
 
-        if (!networkStats.serverTimestamps.ContainsKey(currentTimestamp))
-        {
-            networkStats.serverTimestamps[currentTimestamp] = new Dictionary<string, ClientStats>();
-        }
-
-        if (!networkStats.serverTimestamps[currentTimestamp].ContainsKey(clientKey))
-        {
-            networkStats.serverTimestamps[currentTimestamp][clientKey] = new ClientStats();
-        }
+        networkStats.serverTimestamps[currentTimestamp] = new Dictionary<string, ClientStats>();
+        networkStats.serverTimestamps[currentTimestamp][clientKey] = new ClientStats();
 
         var clientStats = networkStats.serverTimestamps[currentTimestamp][clientKey];
         clientStats.latency = $"{latency}ms";
         clientStats.packetLoss = $"{packetLoss}%";
         clientStats.jitter = $"{jitter}ms";
-        clientStats.score = 0; // Replace with actual score value
+        clientStats.score = scoreboardManager.getScores()[rpcParams.Receive.SenderClientId];
 
-        // Example input data
-        clientStats.inputs.Add(new InputData
-        {
-            timestamp = currentTimestamp,
-            selectedCube = -1 // Replace with actual selected cube value
-        });
+        // // Example input data
+        // clientStats.inputs.Add(new InputData
+        // {
+        //     timestamp = currentTimestamp,
+        //     selectedCube = -1 // Replace with actual selected cube value
+        // });
 
         // Write in JSON file
         UpdateStatsFile();

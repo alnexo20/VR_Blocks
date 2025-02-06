@@ -219,7 +219,7 @@ PrefabInstance:
     - target: {fileID: 8957833746466101681, guid: 135c73887d2c37b4aa50c13b14dec17e,
         type: 3}
       propertyPath: m_Name
-      value: Cube (4)
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -369,7 +369,7 @@ PrefabInstance:
     - target: {fileID: 8957833746466101681, guid: 135c73887d2c37b4aa50c13b14dec17e,
         type: 3}
       propertyPath: m_Name
-      value: Cube (2)
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -519,7 +519,7 @@ PrefabInstance:
     - target: {fileID: 8957833746466101681, guid: 135c73887d2c37b4aa50c13b14dec17e,
         type: 3}
       propertyPath: m_Name
-      value: Cube (7)
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -669,7 +669,7 @@ PrefabInstance:
     - target: {fileID: 8957833746466101681, guid: 135c73887d2c37b4aa50c13b14dec17e,
         type: 3}
       propertyPath: m_Name
-      value: Cube (5)
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -819,7 +819,7 @@ PrefabInstance:
     - target: {fileID: 8957833746466101681, guid: 135c73887d2c37b4aa50c13b14dec17e,
         type: 3}
       propertyPath: m_Name
-      value: Cube (8)
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -969,7 +969,7 @@ PrefabInstance:
     - target: {fileID: 8957833746466101681, guid: 135c73887d2c37b4aa50c13b14dec17e,
         type: 3}
       propertyPath: m_Name
-      value: Cube (1)
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1119,7 +1119,7 @@ PrefabInstance:
     - target: {fileID: 8957833746466101681, guid: 135c73887d2c37b4aa50c13b14dec17e,
         type: 3}
       propertyPath: m_Name
-      value: Cube (3)
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1269,7 +1269,7 @@ PrefabInstance:
     - target: {fileID: 8957833746466101681, guid: 135c73887d2c37b4aa50c13b14dec17e,
         type: 3}
       propertyPath: m_Name
-      value: Cube (6)
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1419,7 +1419,7 @@ PrefabInstance:
     - target: {fileID: 8957833746466101681, guid: 135c73887d2c37b4aa50c13b14dec17e,
         type: 3}
       propertyPath: m_Name
-      value: Cube
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
