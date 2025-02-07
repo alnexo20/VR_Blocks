@@ -95,16 +95,16 @@ public class CubeSpawner : NetworkBehaviour
         NetworkManager.Singleton.Shutdown();
     }
 
-    public void WinnerScreen()
+    public void WinnerScreen(string WinnerText)
     {
-        WinnerScreenClientRpc();
+        WinnerScreenClientRpc(WinnerText);
         if (cubes != null)
         {
             var networkObject = cubes.GetComponent<NetworkObject>();
             if (networkObject != null)
             {
-                networkObject.Despawn();
-                cubes.SetActive(false);
+                networkObject.Despawn(true);
+                Destroy(cubes);
             }
             else
             {
@@ -117,8 +117,8 @@ public class CubeSpawner : NetworkBehaviour
             var networkObject = scoreboard.GetComponent<NetworkObject>();
             if (networkObject != null)
             {
-                networkObject.Despawn();
-                scoreboard.SetActive(false);
+                networkObject.Despawn(true);
+                Destroy(scoreboard);
             }
         }
 
@@ -127,8 +127,8 @@ public class CubeSpawner : NetworkBehaviour
             var networkObject = optionsMenu.GetComponent<NetworkObject>();
             if (networkObject != null)
             {
-                networkObject.Despawn();
-                optionsMenu.SetActive(false);
+                networkObject.Despawn(true);
+                Destroy(optionsMenu);
             }
             
         }
@@ -136,50 +136,17 @@ public class CubeSpawner : NetworkBehaviour
         if (WinnerMenu != null)
         {
             WinnerMenu.SetActive(true);
+            WinnerMenu.gameObject.GetComponentInParent<WinnerMenuManager>().setWinnerText(WinnerText);
         }
     }
 
     [ClientRpc]
-    private void WinnerScreenClientRpc()
+    private void WinnerScreenClientRpc(string WinnerText)
     {
-        if (cubes != null)
-        {
-            var networkObject = cubes.GetComponent<NetworkObject>();
-            if (networkObject != null)
-            {
-                networkObject.Despawn();
-                cubes.SetActive(false);
-            }
-            else
-            {
-                Debug.LogError("NetworkObject component not found on cubes");
-            }
-        }
-
-        if (scoreboard != null)
-        {
-            var networkObject = scoreboard.GetComponent<NetworkObject>();
-            if (networkObject != null)
-            {
-                networkObject.Despawn();
-                scoreboard.SetActive(false);
-            }
-        }
-
-        if (optionsMenu != null)
-        {
-            var networkObject = optionsMenu.GetComponent<NetworkObject>();
-            if (networkObject != null)
-            {
-                networkObject.Despawn();
-                optionsMenu.SetActive(false);
-            }
-            
-        }
-
         if (WinnerMenu != null)
         {
             WinnerMenu.SetActive(true);
+            WinnerMenu.gameObject.GetComponentInParent<WinnerMenuManager>().setWinnerText(WinnerText);
         }
     }
 

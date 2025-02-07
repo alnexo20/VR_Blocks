@@ -70,7 +70,6 @@ public class ScoreboardManager : NetworkBehaviour
         
         if (player1Score.Value >= maxScore || player2Score.Value >= maxScore) { 
             DisplayWinner();
-            cubeSpawner.WinnerScreen();
         }
     }
 
@@ -80,26 +79,11 @@ public class ScoreboardManager : NetworkBehaviour
         
         if (player1Score.Value >= maxScore)
         {
-            winnerText.text = "Player 1 Wins!";
+            cubeSpawner.WinnerScreen("Player 1 Wins!");
         }
         else if (player2Score.Value >= maxScore)
         {
-            winnerText.text = "Player 2 Wins!";
+            cubeSpawner.WinnerScreen("Player 2 Wins!");
         }
-        DisplayWinnerClientRpc();
-    }
-
-    [ClientRpc]
-    private void DisplayWinnerClientRpc()
-    {
-        if (player1Score.Value >= maxScore)
-        {
-            winnerText.text = "Player 1 Wins!";
-        }
-        else if (player2Score.Value >= maxScore)
-        {
-            winnerText.text = "Player 2 Wins!";
-        }
-         
     }
 }

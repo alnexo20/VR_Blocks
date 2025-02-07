@@ -2378,12 +2378,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: c25e49e3c511fe2498b5f09a15b598ca,
         type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'mixamorig8:LeftLeg'\n\tTransform 'mixamorig8:LeftArm'\n\tTransform
-        'mixamorig8:LeftHand'\n\tTransform 'mixamorig8:LeftFoot'\n\tTransform 'mixamorig8:LeftUpLeg'\n\tTransform
-        'mixamorig8:RightUpLeg'\n\tTransform 'mixamorig8:Neck'\n\tTransform 'mixamorig8:LeftForeArm'\n\tTransform
-        'mixamorig8:RightHand'\n\tTransform 'mixamorig8:Head'\n\tand more ..."
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6085633307752451244, guid: c25e49e3c511fe2498b5f09a15b598ca,
         type: 3}
@@ -2648,6 +2643,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1218973869515700361}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c25e49e3c511fe2498b5f09a15b598ca,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2600681330037954926}
+    - targetCorrespondingSourceObject: {fileID: 3407094179604459225, guid: c25e49e3c511fe2498b5f09a15b598ca,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5743342562609481476}
   m_SourcePrefab: {fileID: 100100000, guid: c25e49e3c511fe2498b5f09a15b598ca, type: 3}
 --- !u!4 &170185335559673225 stripped
 Transform:
@@ -2733,6 +2736,43 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3875975922843792493}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1910183244034071220 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3407094179604459225, guid: c25e49e3c511fe2498b5f09a15b598ca,
+    type: 3}
+  m_PrefabInstance: {fileID: 3875975922843792493}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5743342562609481476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910183244034071220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6d65a18c073dd74dacd2ec26c08cfe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!4 &2121241481202894140 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6288693642139913903, guid: c25e49e3c511fe2498b5f09a15b598ca,
@@ -2925,7 +2965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2841920885
+  GlobalObjectIdHash: 73552698
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -3022,6 +3062,37 @@ MonoBehaviour:
       m_Reference: {fileID: 6558622148059887818, guid: c348712bda248c246b8c49b3db54643f,
         type: 3}
   animator: {fileID: 7250986960386427388}
+--- !u!114 &2600681330037954926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4110469524084427068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6d65a18c073dd74dacd2ec26c08cfe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!4 &4281776635010428541 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8169012158776010224, guid: c25e49e3c511fe2498b5f09a15b598ca,

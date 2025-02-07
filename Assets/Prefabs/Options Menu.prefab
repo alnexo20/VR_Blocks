@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1407113676
+  GlobalObjectIdHash: 382249159
   InScenePlacedSourceGlobalObjectIdHash: 1966614228
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -781,7 +781,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7440430643783006071, guid: e5e340a0f99f0ad4ea6830ad5a4ca7cf,
+          type: 3}
         m_TargetAssemblyTypeName: GameStartMenu, Assembly-CSharp
         m_MethodName: EnableMainMenu
         m_Mode: 1
