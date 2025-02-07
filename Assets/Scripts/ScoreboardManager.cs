@@ -69,6 +69,7 @@ public class ScoreboardManager : NetworkBehaviour
         UpdateScoreText();
         
         if (player1Score.Value >= maxScore || player2Score.Value >= maxScore) { 
+            DisplayWinner();
             cubeSpawner.WinnerScreen();
         }
     }

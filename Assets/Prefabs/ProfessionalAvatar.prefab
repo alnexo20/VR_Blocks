@@ -2952,8 +2952,6 @@ MonoBehaviour:
   HeadIKTarget: {fileID: 5160408802503930432}
   LeftIKTarget: {fileID: 5571883666529418812}
   RightIKTarget: {fileID: 7801004397490457018}
-  trackingPositionOffset: {x: 0, y: 0, z: 0}
-  trackingRotationOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &1218973869515700361
 MonoBehaviour:
   m_ObjectHideFlags: 0

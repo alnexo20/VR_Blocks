@@ -16,14 +16,14 @@ public class GameStartMenu : MonoBehaviour
     public Button joinButton;
     public Button serverButton;
     public Button quitButton;
-    private TMP_Text myIPAddress;
+    public TMP_Text myIPAddress;
 
     // Start is called before the first frame update
     void Start()
     {
         EnableMainMenu();
 
-        myIPAddress.text = GetLocalIPAddress();
+        myIPAddress.text = "Your IP: " + GetLocalIPAddress();
 
         //Hook events
         startButton.onClick.AddListener(HideAll);

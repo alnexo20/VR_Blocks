@@ -25,6 +25,8 @@ public class IKTargetFollowVRRig : NetworkBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        if (!IsOwner) return;
+        
         transform.position = HeadIKTarget.position + headBodyPositionOffset;
         float yaw = headTarget.eulerAngles.y;
         transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.Euler(transform.eulerAngles.x, yaw, transform.eulerAngles.z),turnSmoothness);
