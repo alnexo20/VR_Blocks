@@ -92,12 +92,13 @@ public class CubeSpawner : NetworkBehaviour
     }
 
     public void BackToMainMenu(){
-        NetworkManager.Singleton.Shutdown();
+        EndGameServerRpc();
+        GameObject.Find("Start Menu").GetComponent<GameStartMenu>().EnableMainMenu();
     }
 
-    public void WinnerScreen(string WinnerText)
+    [ServerRpc(RequireOwnership = false)]
+    private void EndGameServerRpc()
     {
-        WinnerScreenClientRpc(WinnerText);
         if (cubes != null)
         {
             var networkObject = cubes.GetComponent<NetworkObject>();
@@ -132,6 +133,13 @@ public class CubeSpawner : NetworkBehaviour
             }
             
         }
+        NetworkManager.Singleton.Shutdown();
+    }
+
+    public void WinnerScreen(string WinnerText)
+    {
+        EndGameServerRpc();
+        WinnerScreenClientRpc(WinnerText);
 
         if (WinnerMenu != null)
         {

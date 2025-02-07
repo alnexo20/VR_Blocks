@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4767957111078591135}
+  - component: {fileID: 9026085225394218483}
+  - component: {fileID: 3444642393504145427}
   m_Layer: 0
   m_Name: Winner Menu
   m_TagString: Untagged
@@ -32,6 +34,40 @@ Transform:
   - {fileID: 1037281262518943073}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9026085225394218483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 196235984524520148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 377404076
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &3444642393504145427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 196235984524520148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4364dd7e0ad68fc49ada65748b7fc6ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WinnerText: {fileID: 9070150061570183154}
 --- !u!1 &1190851333691895096
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,9 +324,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameStartMenu, Assembly-CSharp
-        m_MethodName: EnableMainMenu
+      - m_Target: {fileID: 3444642393504145427}
+        m_TargetAssemblyTypeName: WinnerMenuManager, Assembly-CSharp
+        m_MethodName: hideMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -300,9 +336,23 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: OptionsNetworkStats, Assembly-CSharp
+      - m_Target: {fileID: 6012067913534925384, guid: ab14d87caa4fa0a4e916e1ee18c6ac23,
+          type: 3}
+        m_TargetAssemblyTypeName: CubeSpawner, Assembly-CSharp
         m_MethodName: BackToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5146586732480830178, guid: 830e70628519cfa4dac9eb27dd233aac,
+          type: 3}
+        m_TargetAssemblyTypeName: GameStartMenu, Assembly-CSharp
+        m_MethodName: EnableMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -757,3 +807,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2037280603490277403}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9070150061570183154 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7033068487957551081, guid: f38f62c77accdd249ad46af2c001c9f6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2037280603490277403}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

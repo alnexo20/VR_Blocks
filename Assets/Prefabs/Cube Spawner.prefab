@@ -40,13 +40,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7005900425887671644}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 584625305
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 584625305
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -66,9 +66,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 870394d5fb25b6a488ef3b6a3419dafb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubesPrefab: {fileID: 8308178683184116984, guid: e49a4b35e9dd33243ade515adf273207,
+  cubesPrefab: {fileID: 3423432785875373109, guid: d328c99bfc5ce5842a927a9139de9dd7,
     type: 3}
-  spawnPosition: {x: -1.083821, y: 1.825527, z: 4.995275}
-  scoreboard: {fileID: 6760140611976251985, guid: d2df3c83747e92d44ab662aa98899077,
+  spawnPosition: {x: -1.46, y: 0.35, z: 1.12}
+  scoreboardPrefab: {fileID: 5504664038272264355, guid: 671d756014aebe144884ecc0eb543dda,
     type: 3}
-  spawnPositionScoreBoard: {x: 1.858, y: 1.357, z: 0}
+  spawnPositionScoreBoard: {x: 0.21, y: 1.6, z: 0}
+  WinnerMenu: {fileID: 0}
+  optionsMenuPrefab: {fileID: 847796676172045432, guid: 71e4cb6856a19624dbaa8894307e8c0e,
+    type: 3}
+  spawnPositionOptionsMenu: {x: -4.989, y: 2, z: 6.932}

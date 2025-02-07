@@ -188,10 +188,4 @@ public class OptionsNetworkStats : NetworkBehaviour
         packetLossText.text = "Packet Loss: " + packetLoss.ToString() + "%";
         jitterText.text = "Jitter: " + jitter.ToString() + "ms";
     }
-
-    public void BackToMainMenu()
-    {
-        optionsMenu.SetActive(false);
-        NetworkManager.Singleton.Shutdown();
-    }
 }
