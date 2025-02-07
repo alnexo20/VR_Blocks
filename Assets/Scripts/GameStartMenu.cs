@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,11 +16,14 @@ public class GameStartMenu : MonoBehaviour
     public Button joinButton;
     public Button serverButton;
     public Button quitButton;
+    private TMP_Text myIPAddress;
 
     // Start is called before the first frame update
     void Start()
     {
         EnableMainMenu();
+
+        myIPAddress.text = GetLocalIPAddress();
 
         //Hook events
         startButton.onClick.AddListener(HideAll);
@@ -42,5 +47,20 @@ public class GameStartMenu : MonoBehaviour
     {
         mainMenu.SetActive(true);
         title.SetActive(true);
+    }
+
+    private string GetLocalIPAddress()
+    {
+        string localIP = "";
+        var host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (var ip in host.AddressList)
+        {
+            if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            {
+                localIP = ip.ToString();
+                break;
+            }
+        }
+        return localIP;
     }
 }
