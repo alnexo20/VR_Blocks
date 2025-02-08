@@ -14,9 +14,9 @@ public class OptionsNetworkStats : NetworkBehaviour
     public TextMeshProUGUI latencyText;
     public TextMeshProUGUI packetLossText;
     public TextMeshProUGUI jitterText;
-    public float latency = 0f;
-    public float packetLoss = 0f;
-    public float jitter = 0f;
+    private float latency = 0f;
+    private float packetLoss = 0f;
+    private float jitter = 0f;
     private Stopwatch stopwatch;
     private int sentPackets;
     private int receivedPackets;
@@ -69,6 +69,7 @@ public class OptionsNetworkStats : NetworkBehaviour
 
         if (IsServer || IsHost){
             stopwatch = new Stopwatch();
+            networkStats = new NetworkStats();
             filePath = "./NetworkStats.json"; // Path for the JSON file
             CreateFile();
             // Start sending pings and updating network stats
@@ -81,7 +82,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         while (true)
         {
             SendPingServerRpc();
-            yield return new WaitForSeconds(1/3); // Adjust the interval as needed
+            yield return new WaitForSeconds(1/2); // Adjust the interval as needed
         }
     }
 
@@ -174,7 +175,7 @@ public class OptionsNetworkStats : NetworkBehaviour
 
     private void TruncateFile()
     {
-        UnityEngine.Debug.Log("The max size limit of 5MB has been reached for file NetworkStats.json");
+        UnityEngine.Debug.Log("The max size limit of 500 MB has been reached for file NetworkStats.json");
     }
 
     private void CreateFile()

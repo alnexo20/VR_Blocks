@@ -92,7 +92,7 @@ public class CubeSpawner : NetworkBehaviour
     }
 
     public void BackToMainMenu(){
-        EndGameServerRpc();
+        EndGame();
         GameObject.Find("Start Menu").GetComponent<GameStartMenu>().EnableMainMenu();
     }
 
@@ -136,9 +136,53 @@ public class CubeSpawner : NetworkBehaviour
         NetworkManager.Singleton.Shutdown();
     }
 
+    private void EndGame()
+    {
+        // ServerRpc is not called if server or host is the one executing this function
+        if (IsServer || IsHost){
+            if (cubes != null)
+            {
+                var networkObject = cubes.GetComponent<NetworkObject>();
+                if (networkObject != null)
+                {
+                    networkObject.Despawn(true);
+                    Destroy(cubes);
+                }
+                else
+                {
+                    Debug.LogError("NetworkObject component not found on cubes");
+                }
+            }
+
+            if (scoreboard != null)
+            {
+                var networkObject = scoreboard.GetComponent<NetworkObject>();
+                if (networkObject != null)
+                {
+                    networkObject.Despawn(true);
+                    Destroy(scoreboard);
+                }
+            }
+
+            if (optionsMenu != null)
+            {
+                var networkObject = optionsMenu.GetComponent<NetworkObject>();
+                if (networkObject != null)
+                {
+                    networkObject.Despawn(true);
+                    Destroy(optionsMenu);
+                }
+                
+            }
+            NetworkManager.Singleton.Shutdown();
+        }else{
+            EndGameServerRpc();
+        }
+    }
+
     public void WinnerScreen(string WinnerText)
     {
-        EndGameServerRpc();
+        EndGame();
         WinnerScreenClientRpc(WinnerText);
 
         if (WinnerMenu != null)
