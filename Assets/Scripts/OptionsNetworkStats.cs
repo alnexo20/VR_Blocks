@@ -169,7 +169,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         {
             TruncateFile();
         }else{
-            File.AppendAllText(filePath, JsonConvert.SerializeObject(networkStats, Formatting.Indented));
+            File.WriteAllText(filePath, JsonConvert.SerializeObject(networkStats, Formatting.Indented));
         }       
     }
 
