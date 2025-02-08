@@ -17,6 +17,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     private float latency = 0f;
     private float packetLoss = 0f;
     private float jitter = 0f;
+    private float previousLatency = 0f;
     private Stopwatch stopwatch;
     private int sentPackets;
     private int receivedPackets;
@@ -67,7 +68,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         packetLoss = 0;
         jitter = 0;
 
-        if (IsServer || IsHost){
+        if (IsServer){
             stopwatch = new Stopwatch();
             networkStats = new NetworkStats();
             filePath = "./NetworkStats.json"; // Path for the JSON file
@@ -81,7 +82,9 @@ public class OptionsNetworkStats : NetworkBehaviour
     {
         while (true)
         {
-            SendPingServerRpc();
+            stopwatch.Start(); 
+            SendPingClientRpc();
+            sentPackets++;
             yield return new WaitForSeconds(1/2); // Adjust the interval as needed
         }
     }
@@ -89,14 +92,6 @@ public class OptionsNetworkStats : NetworkBehaviour
     [ClientRpc]
     void SendPingClientRpc(ClientRpcParams rpcParams = default) { 
         SendPongServerRpc(); 
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    void SendPingServerRpc(ServerRpcParams rpcParams = default)
-    {
-        stopwatch.Start(); 
-        SendPingClientRpc();
-        sentPackets++;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -108,7 +103,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         receivedPackets++;
         packetDelays.Add(latency);
         CalculatePacketLoss();
-        CalculateAvgJitter();
+        CalculateJitter();
         stopwatch.Reset();
 
         // Update UI text in game
@@ -146,17 +141,13 @@ public class OptionsNetworkStats : NetworkBehaviour
         }
     }
 
-    private void CalculateAvgJitter()
+    private void CalculateJitter()
     {
-        if (packetDelays.Count > 1)
+        if (previousLatency > 0)
         {
-            float jitterSum = 0f;
-            for (int i = 1; i < packetDelays.Count; i++)
-            {
-                jitterSum += Mathf.Abs(packetDelays[i] - packetDelays[i - 1]);
-            }
-            jitter = jitterSum / (packetDelays.Count - 1);
+            jitter = Mathf.Abs(latency - previousLatency);
         }
+        previousLatency = latency;
     }
 
     private void UpdateStatsFile()
