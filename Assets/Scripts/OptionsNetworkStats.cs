@@ -14,14 +14,14 @@ public class OptionsNetworkStats : NetworkBehaviour
     public TextMeshProUGUI latencyText;
     public TextMeshProUGUI packetLossText;
     public TextMeshProUGUI jitterText;
-    private float latency = 0f;
-    private float packetLoss = 0f;
-    private float jitter = 0f;
-    private float previousLatency = 0f;
+    private Dictionary<ulong, float> latencies = new Dictionary<ulong, float>();
+    private Dictionary<ulong, float> packetLosses = new Dictionary<ulong, float>();
+    private Dictionary<ulong, float> jitters = new Dictionary<ulong, float>();
+    private Dictionary<ulong, float> previousLatencies = new Dictionary<ulong, float>();
+    private Dictionary<ulong, int> sentPackets = new Dictionary<ulong, int>();
+    private Dictionary<ulong, int> receivedPackets = new Dictionary<ulong, int>();
+    private Dictionary<ulong, List<float>> packetDelays = new Dictionary<ulong, List<float>>();
     private Stopwatch stopwatch;
-    private int sentPackets;
-    private int receivedPackets;
-    private List<float> packetDelays = new List<float>();
     private string filePath;
     private const long MaxFileSize = 512 * 1024 * 1024; // 500 MB size limit
     ScoreboardManager scoreboardManager;
@@ -56,8 +56,6 @@ public class OptionsNetworkStats : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        sentPackets = 0;
-        receivedPackets = 0;
         networkStats = new NetworkStats();
         scoreboardManager = GameObject.FindGameObjectWithTag("Scoreboard").GetComponent<ScoreboardManager>();
     }
@@ -65,15 +63,25 @@ public class OptionsNetworkStats : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         optionsMenu.SetActive(true);
-        latency = 0;
-        packetLoss = 0;
-        jitter = 0;
 
         if (IsServer){
             stopwatch = new Stopwatch();
             networkStats = new NetworkStats();
             filePath = "./NetworkStats.json"; // Path for the JSON file
             CreateFile();
+
+            // Initialize dictionaries for each connected client
+            foreach (var clientId in NetworkManager.ConnectedClients.Keys)
+            {
+                latencies[clientId] = 0f;
+                packetLosses[clientId] = 0f;
+                jitters[clientId] = 0f;
+                previousLatencies[clientId] = 0f;
+                sentPackets[clientId] = 0;
+                receivedPackets[clientId] = 0;
+                packetDelays[clientId] = new List<float>();
+            }
+
             // Start sending pings and updating network stats
             StartCoroutine(PingRoutine());
         }
@@ -84,8 +92,14 @@ public class OptionsNetworkStats : NetworkBehaviour
         while (true)
         {
             stopwatch.Start(); 
+
+            // Each connected client will answer this, so we are sending as many packets/calls as clients and not 1 packet
             SendPingClientRpc();
-            sentPackets++;
+            foreach (var clientId in NetworkManager.ConnectedClients.Keys)
+            {
+                sentPackets[clientId]++;
+            }
+
             yield return new WaitForSeconds(1/2); // Adjust the interval as needed
         }
     }
@@ -98,30 +112,32 @@ public class OptionsNetworkStats : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void SendPongServerRpc(ServerRpcParams rpcParams = default)
     {
+        var clientId = rpcParams.Receive.SenderClientId;
+
         // Calculate Latency, packet loss and jitter
         stopwatch.Stop();
-        latency = stopwatch.ElapsedMilliseconds;
-        receivedPackets++;
-        packetDelays.Add(latency);
-        CalculatePacketLoss();
-        CalculateJitter();
+        latencies[clientId] = stopwatch.ElapsedMilliseconds;
+        receivedPackets[clientId]++;
+        packetDelays[clientId].Add(latencies[clientId]);
+        CalculatePacketLoss(clientId);
+        CalculateJitter(clientId);
         stopwatch.Reset();
 
         // Update UI text in game
-        UpdateNetworkStatsText();
+        UpdateNetworkStatsTextClientRpc(clientId);
 
         // Store calculated values
-        string clientKey = $"Client_{rpcParams.Receive.SenderClientId}";
+        string clientKey = $"Client_{clientId}";
         string currentTimestamp = DateTime.UtcNow.ToString("o");
 
         networkStats.serverTimestamps[currentTimestamp] = new Dictionary<string, ClientStats>();
         networkStats.serverTimestamps[currentTimestamp][clientKey] = new ClientStats();
 
         var clientStats = networkStats.serverTimestamps[currentTimestamp][clientKey];
-        clientStats.latency = $"{latency}ms";
-        clientStats.packetLoss = $"{packetLoss}%";
-        clientStats.jitter = $"{jitter}ms";
-        clientStats.score = scoreboardManager.getScores()[rpcParams.Receive.SenderClientId];
+        clientStats.latency = $"{latencies[clientId]}ms";
+        clientStats.packetLoss = $"{packetLosses[clientId]}%";
+        clientStats.jitter = $"{jitters[clientId]}ms";
+        clientStats.score = scoreboardManager.getScores()[clientId];
 
         // // Example input data
         // clientStats.inputs.Add(new InputData
@@ -134,21 +150,21 @@ public class OptionsNetworkStats : NetworkBehaviour
         UpdateStatsFile();
     }
 
-    private void CalculatePacketLoss()
+    private void CalculatePacketLoss(ulong clientId)
     {
-        if (sentPackets > 0)
+        if (sentPackets[clientId] > 0)
         {
-            packetLoss = (float)(sentPackets - receivedPackets) / sentPackets * 100;
+            packetLosses[clientId] = (float)(sentPackets[clientId] - receivedPackets[clientId]) / sentPackets[clientId] * 100;
         }
     }
 
-    private void CalculateJitter()
+    private void CalculateJitter(ulong clientId)
     {
-        if (previousLatency > 0)
+        if (previousLatencies[clientId] > 0)
         {
-            jitter = Mathf.Abs(latency - previousLatency);
+            jitters[clientId] = Mathf.Abs(latencies[clientId] - previousLatencies[clientId]);
         }
-        previousLatency = latency;
+        previousLatencies[clientId] = latencies[clientId];
     }
 
     private void UpdateStatsFile()
@@ -175,11 +191,14 @@ public class OptionsNetworkStats : NetworkBehaviour
         File.WriteAllText(filePath, JsonConvert.SerializeObject(networkStats, Formatting.Indented));
     }
 
-    private void UpdateNetworkStatsText()
+    [ClientRpc]
+    private void UpdateNetworkStatsTextClientRpc(ulong clientId, ClientRpcParams clientRpcParams = default)
     {
-        latencyText.text = "Latency: " + latency.ToString() + "ms";
-        packetLossText.text = "Packet Loss: " + packetLoss.ToString() + "%";
-        jitterText.text = "Jitter: " + jitter.ToString() + "ms";
+        if (NetworkManager.LocalClientId == clientId){
+            latencyText.text = "Latency: " + latencies[clientId].ToString() + "ms";
+            packetLossText.text = "Packet Loss: " + packetLosses[clientId].ToString() + "%";
+            jitterText.text = "Jitter: " + jitters[clientId].ToString() + "ms";
+        }
     }
 
     public void BackToMainMenu(){
