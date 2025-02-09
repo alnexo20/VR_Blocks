@@ -71,9 +71,6 @@ MonoBehaviour:
   latencyText: {fileID: 8618436643329266374}
   packetLossText: {fileID: 5454743456760411034}
   jitterText: {fileID: 3988869243187326110}
-  latency: 0
-  packetLoss: 0
-  jitter: 0
 --- !u!1 &2874402252909910890
 GameObject:
   m_ObjectHideFlags: 0
@@ -781,9 +778,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6012067913534925384, guid: ab14d87caa4fa0a4e916e1ee18c6ac23,
-          type: 3}
-        m_TargetAssemblyTypeName: CubeSpawner, Assembly-CSharp
+      - m_Target: {fileID: 6552034767627856703}
+        m_TargetAssemblyTypeName: OptionsNetworkStats, Assembly-CSharp
         m_MethodName: BackToMainMenu
         m_Mode: 1
         m_Arguments:

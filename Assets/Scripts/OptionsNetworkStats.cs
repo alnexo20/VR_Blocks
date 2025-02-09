@@ -25,6 +25,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     private string filePath;
     private const long MaxFileSize = 512 * 1024 * 1024; // 500 MB size limit
     ScoreboardManager scoreboardManager;
+    CubeSpawner cubeSpawner;
 
 
     [Serializable]
@@ -179,5 +180,9 @@ public class OptionsNetworkStats : NetworkBehaviour
         latencyText.text = "Latency: " + latency.ToString() + "ms";
         packetLossText.text = "Packet Loss: " + packetLoss.ToString() + "%";
         jitterText.text = "Jitter: " + jitter.ToString() + "ms";
+    }
+
+    public void BackToMainMenu(){
+        GameObject.Find("Cube Spawner").GetComponent<CubeSpawner>().BackToMainMenu();
     }
 }

@@ -39,6 +39,7 @@ public class CubeSpawner : NetworkBehaviour
             if (networkObject != null)
             {
                 networkObject.Spawn();
+                networkObject.ChangeOwnership(NetworkManager.ServerClientId);
             }
             else
             {
@@ -57,6 +58,7 @@ public class CubeSpawner : NetworkBehaviour
             if (networkObject != null)
             {
                 networkObject.Spawn();
+                networkObject.ChangeOwnership(NetworkManager.ServerClientId);
             }
             else
             {
@@ -74,6 +76,7 @@ public class CubeSpawner : NetworkBehaviour
             if (networkObject != null)
             {
                 networkObject.Spawn();
+                networkObject.ChangeOwnership(NetworkManager.ServerClientId);
             }
             else
             {
@@ -94,6 +97,12 @@ public class CubeSpawner : NetworkBehaviour
     public void BackToMainMenu(){
         EndGame();
         GameObject.Find("Start Menu").GetComponent<GameStartMenu>().EnableMainMenu();
+        BackToMainMenuClientRpc();
+    }
+
+    [ClientRpc]
+    public void BackToMainMenuClientRpc(){
+        GameObject.Find("Start Menu").GetComponent<GameStartMenu>().EnableMainMenu();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -105,7 +114,7 @@ public class CubeSpawner : NetworkBehaviour
             if (networkObject != null)
             {
                 networkObject.Despawn(true);
-                Destroy(cubes);
+                Debug.Log("Cubes despawned.");
             }
             else
             {
@@ -119,7 +128,6 @@ public class CubeSpawner : NetworkBehaviour
             if (networkObject != null)
             {
                 networkObject.Despawn(true);
-                Destroy(scoreboard);
             }
         }
 
@@ -129,7 +137,6 @@ public class CubeSpawner : NetworkBehaviour
             if (networkObject != null)
             {
                 networkObject.Despawn(true);
-                Destroy(optionsMenu);
             }
             
         }
@@ -146,7 +153,6 @@ public class CubeSpawner : NetworkBehaviour
                 if (networkObject != null)
                 {
                     networkObject.Despawn(true);
-                    Destroy(cubes);
                 }
                 else
                 {
@@ -160,7 +166,6 @@ public class CubeSpawner : NetworkBehaviour
                 if (networkObject != null)
                 {
                     networkObject.Despawn(true);
-                    Destroy(scoreboard);
                 }
             }
 
@@ -170,7 +175,6 @@ public class CubeSpawner : NetworkBehaviour
                 if (networkObject != null)
                 {
                     networkObject.Despawn(true);
-                    Destroy(optionsMenu);
                 }
                 
             }
