@@ -5,6 +5,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using System;
 
 public class CubeManager : NetworkBehaviour
 {
@@ -16,6 +17,7 @@ public class CubeManager : NetworkBehaviour
     public ScoreboardManager scoreboardManager;
     private int lastSelectedCubeIndex = -1;
     private NetworkVariable<int> currentGreenCube = new NetworkVariable<int>(-1);
+    OptionsNetworkStats optionsNetworkStats;
 
     void Start()
     {
@@ -31,6 +33,12 @@ public class CubeManager : NetworkBehaviour
         scoreboardManager = FindObjectOfType<ScoreboardManager>(); 
         if (scoreboardManager == null) { 
             Debug.LogError("ScoreboardManager not found!"); 
+        }
+
+        // Find the oprionsNetwork instance at runtime 
+        optionsNetworkStats = FindObjectOfType<OptionsNetworkStats>(); 
+        if (optionsNetworkStats == null) { 
+            Debug.LogError("OptionsNetworkStats not found!"); 
         }
     }
 
@@ -58,7 +66,7 @@ public class CubeManager : NetworkBehaviour
     {
         // This implementation is not really efficient but probability of repeating same number more than 5 times is <<<
         do{
-            currentGreenCube.Value = Random.Range(0, cubes.Length);
+            currentGreenCube.Value = UnityEngine.Random.Range(0, cubes.Length);
         } while(currentGreenCube.Value == lastSelectedCubeIndex);
         Renderer cubeRenderer = cubes[currentGreenCube.Value].GetComponent<Renderer>();
         cubeRenderer.material.color = Color.green;
@@ -98,6 +106,14 @@ public class CubeManager : NetworkBehaviour
         if (selectedCube == greenCube && selectedCube == cubes[currentGreenCube.Value].name && !hasScored.Value){
             scoreboardManager.UpdatePlayerScore(rpcParams.Receive.SenderClientId);
             addOnePoint();
+            
+            OptionsNetworkStats.InputData inputData = new OptionsNetworkStats.InputData {
+                timestamp = DateTime.UtcNow.ToString("o"),
+                selectedCube = selectedCube,
+                correctClientCube = greenCube,
+                correctServerCube = cubes[currentGreenCube.Value].name,
+            };
+            optionsNetworkStats.AddClientData(inputData, rpcParams.Receive.SenderClientId);
         }
     }
 }

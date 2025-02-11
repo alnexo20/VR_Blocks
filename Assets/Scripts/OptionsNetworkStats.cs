@@ -21,10 +21,10 @@ public class OptionsNetworkStats : NetworkBehaviour
     private Dictionary<ulong, int> sentPackets = new Dictionary<ulong, int>();
     private Dictionary<ulong, int> receivedPackets = new Dictionary<ulong, int>();
     private Dictionary<ulong, List<float>> packetDelays = new Dictionary<ulong, List<float>>();
+    private Dictionary<ulong, InputData> clientsData = new Dictionary<ulong, InputData>();
     private string filePath;
     private const long MaxFileSize = 50 * 1024 * 1024; // 50 MB size limit
     ScoreboardManager scoreboardManager;
-
 
     [Serializable]
     public class ClientStats
@@ -35,14 +35,16 @@ public class OptionsNetworkStats : NetworkBehaviour
         public int score;
         public int packetsSent;
         public int packetsRecieved;
-        // public List<InputData> inputs = new List<InputData>();
+        public List<InputData> inputs = new List<InputData>();
     }
 
     [Serializable]
     public class InputData
     {
         public string timestamp;
-        public int selectedCube;
+        public string selectedCube;
+        public string correctClientCube;
+        public string correctServerCube;
     }
 
     [Serializable]
@@ -90,13 +92,16 @@ public class OptionsNetworkStats : NetworkBehaviour
     {
         while (true)
         {
-            // Each connected client will answer this, so we are sending as many packets/calls as clients and not 1 packet
-            SendPingClientRpc();
-            foreach (var clientId in NetworkManager.ConnectedClients.Keys)
-            {
-                sentPackets[clientId] = sentPackets[clientId] + NetworkManager.ConnectedClients.Count;
+            // Check if there are connected clients
+            if (NetworkManager.ConnectedClients.Count > 0){
+                // Each connected client will answer this, so we are sending as many packets/calls as clients and not 1 packet
+                SendPingClientRpc();
+                foreach (var clientId in NetworkManager.ConnectedClients.Keys)
+                {
+                    sentPackets[clientId]++;
+                }
+                yield return new WaitForSeconds(1/3); // Adjust the interval as needed
             }
-            yield return new WaitForSeconds(1); // Adjust the interval as needed
         }
     }
 
@@ -133,17 +138,18 @@ public class OptionsNetworkStats : NetworkBehaviour
         clientStats.jitter = $"{jitters[clientId]}ms";
         clientStats.score = scoreboardManager.getScores()[clientId];
         clientStats.packetsSent = sentPackets[clientId];
-        clientStats.packetsSent = receivedPackets[clientId];
+        clientStats.packetsRecieved = receivedPackets[clientId];
 
-        // // Example input data
-        // clientStats.inputs.Add(new InputData
-        // {
-        //     timestamp = currentTimestamp,
-        //     selectedCube = -1 // Replace with actual selected cube value
-        // });
+        if (clientsData[clientId] != null){
+            clientStats.inputs.Add(clientsData[clientId]);
+        }
 
         // Write in JSON file
         UpdateStatsFile();
+    }
+
+    public void AddClientData(InputData clientData, ulong clientId){
+        clientsData[clientId] = clientData;
     }
 
     private void CalculatePacketLoss(ulong clientId)
