@@ -21,11 +21,9 @@ public class OptionsNetworkStats : NetworkBehaviour
     private Dictionary<ulong, int> sentPackets = new Dictionary<ulong, int>();
     private Dictionary<ulong, int> receivedPackets = new Dictionary<ulong, int>();
     private Dictionary<ulong, List<float>> packetDelays = new Dictionary<ulong, List<float>>();
-    private Stopwatch stopwatch;
     private string filePath;
-    private const long MaxFileSize = 512 * 1024 * 1024; // 500 MB size limit
+    private const long MaxFileSize = 50 * 1024 * 1024; // 50 MB size limit
     ScoreboardManager scoreboardManager;
-    CubeSpawner cubeSpawner;
 
 
     [Serializable]
@@ -35,6 +33,8 @@ public class OptionsNetworkStats : NetworkBehaviour
         public string packetLoss;
         public string jitter;
         public int score;
+        public int packetsSent;
+        public int packetsRecieved;
         // public List<InputData> inputs = new List<InputData>();
     }
 
@@ -65,7 +65,6 @@ public class OptionsNetworkStats : NetworkBehaviour
         optionsMenu.SetActive(true);
 
         if (IsServer){
-            stopwatch = new Stopwatch();
             networkStats = new NetworkStats();
             filePath = "./NetworkStats.json"; // Path for the JSON file
             CreateFile();
@@ -91,16 +90,13 @@ public class OptionsNetworkStats : NetworkBehaviour
     {
         while (true)
         {
-            stopwatch.Start(); 
-
             // Each connected client will answer this, so we are sending as many packets/calls as clients and not 1 packet
             SendPingClientRpc();
             foreach (var clientId in NetworkManager.ConnectedClients.Keys)
             {
-                sentPackets[clientId]++;
+                sentPackets[clientId] = sentPackets[clientId] + NetworkManager.ConnectedClients.Count;
             }
-
-            yield return new WaitForSeconds(1/2); // Adjust the interval as needed
+            yield return new WaitForSeconds(1); // Adjust the interval as needed
         }
     }
 
@@ -114,14 +110,12 @@ public class OptionsNetworkStats : NetworkBehaviour
     {
         var clientId = rpcParams.Receive.SenderClientId;
 
-        // Calculate Latency, packet loss and jitter
-        stopwatch.Stop();
-        latencies[clientId] = stopwatch.ElapsedMilliseconds;
+        latencies[clientId] = NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetCurrentRtt(clientId);
+        UnityEngine.Debug.Log($"{(NetworkManager.LocalTime - NetworkManager.ServerTime).TimeAsFloat}");
         receivedPackets[clientId]++;
         packetDelays[clientId].Add(latencies[clientId]);
         CalculatePacketLoss(clientId);
         CalculateJitter(clientId);
-        stopwatch.Reset();
 
         // Update UI text in game
         UpdateNetworkStatsTextClientRpc(clientId);
@@ -138,6 +132,8 @@ public class OptionsNetworkStats : NetworkBehaviour
         clientStats.packetLoss = $"{packetLosses[clientId]}%";
         clientStats.jitter = $"{jitters[clientId]}ms";
         clientStats.score = scoreboardManager.getScores()[clientId];
+        clientStats.packetsSent = sentPackets[clientId];
+        clientStats.packetsSent = receivedPackets[clientId];
 
         // // Example input data
         // clientStats.inputs.Add(new InputData
@@ -183,7 +179,7 @@ public class OptionsNetworkStats : NetworkBehaviour
 
     private void TruncateFile()
     {
-        UnityEngine.Debug.Log("The max size limit of 500 MB has been reached for file NetworkStats.json");
+        UnityEngine.Debug.Log("The max size limit of 50 MB has been reached for file NetworkStats.json");
     }
 
     private void CreateFile()
