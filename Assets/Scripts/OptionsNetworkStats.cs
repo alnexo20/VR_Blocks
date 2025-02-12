@@ -21,7 +21,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     private Dictionary<ulong, int> sentPackets = new Dictionary<ulong, int>();
     private Dictionary<ulong, int> receivedPackets = new Dictionary<ulong, int>();
     private Dictionary<ulong, List<float>> packetDelays = new Dictionary<ulong, List<float>>();
-    private Dictionary<ulong, InputData> clientsData = new Dictionary<ulong, InputData>();
+    private Dictionary<ulong, List<InputData>> clientsData = new Dictionary<ulong, List<InputData>>();
     private string filePath;
     private const long MaxFileSize = 50 * 1024 * 1024; // 50 MB size limit
     ScoreboardManager scoreboardManager;
@@ -141,7 +141,9 @@ public class OptionsNetworkStats : NetworkBehaviour
         clientStats.packetsRecieved = receivedPackets[clientId];
 
         if (clientsData[clientId] != null){
-            clientStats.inputs.Add(clientsData[clientId]);
+            clientStats.inputs = clientsData[clientId];
+            // Clear clientsData[clientId] for next call
+            clientsData[clientId].Clear();
         }
 
         // Write in JSON file
@@ -149,7 +151,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     }
 
     public void AddClientData(InputData clientData, ulong clientId){
-        clientsData[clientId] = clientData;
+        clientsData[clientId].Add(clientData);
     }
 
     private void CalculatePacketLoss(ulong clientId)
