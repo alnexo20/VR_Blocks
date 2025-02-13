@@ -14,12 +14,14 @@ public class ScoreboardManager : NetworkBehaviour
     public NetworkVariable<int> player2Score = new NetworkVariable<int>(0);
     private int maxScore = 30;
     CubeSpawner cubeSpawner;
+    OptionsNetworkStats optionsNetworkStats;
 
     // Start is called before the first frame update
     void Start()
     {
         this.gameObject.SetActive(true);
         cubeSpawner = GameObject.FindGameObjectWithTag("Cube Spawner").GetComponent<CubeSpawner>();
+        optionsNetworkStats = GameObject.FindGameObjectWithTag("Options Menu").GetComponent<OptionsNetworkStats>();
     }
 
     public override void OnNetworkSpawn() { 
@@ -69,14 +71,17 @@ public class ScoreboardManager : NetworkBehaviour
         UpdateScoreText();
         
         if (player1Score.Value >= maxScore || player2Score.Value >= maxScore) { 
+            // if (optionsNetworkStats != null){
+            //     optionsNetworkStats.FinalScore();
+            // }
             DisplayWinner();
         }
     }
 
-    // Unused functions below
     private void DisplayWinner()
     {
-        
+        //if (optionsNetworkStats != null) optionsNetworkStats.FinalScore();
+
         if (player1Score.Value >= maxScore)
         {
             cubeSpawner.WinnerScreen("Player 1 Wins!");

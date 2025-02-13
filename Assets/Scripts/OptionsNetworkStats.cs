@@ -21,8 +21,8 @@ public class OptionsNetworkStats : NetworkBehaviour
     private Dictionary<ulong, int> sentPackets = new Dictionary<ulong, int>();
     private Dictionary<ulong, int> receivedPackets = new Dictionary<ulong, int>();
     private Dictionary<ulong, List<float>> packetDelays = new Dictionary<ulong, List<float>>();
-    private Dictionary<ulong, List<InputData>> clientsData = new Dictionary<ulong, List<InputData>>();
     private string filePath;
+    private string currentTimestamp;
     private const long MaxFileSize = 50 * 1024 * 1024; // 50 MB size limit
     ScoreboardManager scoreboardManager;
 
@@ -71,20 +71,24 @@ public class OptionsNetworkStats : NetworkBehaviour
             filePath = "./NetworkStats.json"; // Path for the JSON file
             CreateFile();
 
-            // Initialize dictionaries for each connected client
-            foreach (var clientId in NetworkManager.ConnectedClients.Keys)
-            {
-                latencies[clientId] = 0f;
-                packetLosses[clientId] = 0f;
-                jitters[clientId] = 0f;
-                previousLatencies[clientId] = 0f;
-                sentPackets[clientId] = 0;
-                receivedPackets[clientId] = 0;
-                packetDelays[clientId] = new List<float>();
-            }
+            InitializeDicts();
 
             // Start sending pings and updating network stats
             StartCoroutine(PingRoutine());
+        }
+    }
+
+    private void InitializeDicts(){
+        // Initialize dictionaries for each connected client
+        foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            latencies[clientId] = 0f;
+            packetLosses[clientId] = 0f;
+            jitters[clientId] = 0f;
+            previousLatencies[clientId] = 0f;
+            sentPackets[clientId] = 0;
+            receivedPackets[clientId] = -1;
+            packetDelays[clientId] = new List<float>();
         }
     }
 
@@ -127,7 +131,7 @@ public class OptionsNetworkStats : NetworkBehaviour
 
         // Store calculated values
         string clientKey = $"Client_{clientId}";
-        string currentTimestamp = DateTime.UtcNow.ToString("o");
+        currentTimestamp = DateTime.UtcNow.ToString("o");
 
         networkStats.serverTimestamps[currentTimestamp] = new Dictionary<string, ClientStats>();
         networkStats.serverTimestamps[currentTimestamp][clientKey] = new ClientStats();
@@ -140,18 +144,20 @@ public class OptionsNetworkStats : NetworkBehaviour
         clientStats.packetsSent = sentPackets[clientId];
         clientStats.packetsRecieved = receivedPackets[clientId];
 
-        if (clientsData[clientId] != null){
-            clientStats.inputs = clientsData[clientId];
-            // Clear clientsData[clientId] for next call
-            clientsData[clientId].Clear();
-        }
-
         // Write in JSON file
         UpdateStatsFile();
     }
 
     public void AddClientData(InputData clientData, ulong clientId){
-        clientsData[clientId].Add(clientData);
+        string clientKey = $"Client_{clientId}";
+        networkStats.serverTimestamps[currentTimestamp][clientKey].inputs.Add(clientData);
+    }
+
+    public void FinalScore(){
+        currentTimestamp = DateTime.UtcNow.ToString("o");
+        networkStats.serverTimestamps[currentTimestamp]["Client_0"].score = scoreboardManager.getScores()[0];
+        networkStats.serverTimestamps[currentTimestamp]["Client_1"].score = scoreboardManager.getScores()[1];
+        UpdateStatsFile();
     }
 
     private void CalculatePacketLoss(ulong clientId)
@@ -199,9 +205,9 @@ public class OptionsNetworkStats : NetworkBehaviour
     private void UpdateNetworkStatsTextClientRpc(ulong clientId, ClientRpcParams clientRpcParams = default)
     {
         if (NetworkManager.LocalClientId == clientId){
-            latencyText.text = "Latency: " + latencies[clientId].ToString() + "ms";
-            packetLossText.text = "Packet Loss: " + packetLosses[clientId].ToString() + "%";
-            jitterText.text = "Jitter: " + jitters[clientId].ToString() + "ms";
+            // latencyText.text = "Latency: " + latencies[clientId].ToString() + "ms";
+            // packetLossText.text = "Packet Loss: " + packetLosses[clientId].ToString() + "%";
+            // jitterText.text = "Jitter: " + jitters[clientId].ToString() + "ms";
         }
     }
 

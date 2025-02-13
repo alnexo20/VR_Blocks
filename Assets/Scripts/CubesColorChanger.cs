@@ -102,18 +102,21 @@ public class CubeManager : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     private void RequestScoreUpdateServerRpc(string selectedCube, string greenCube, ServerRpcParams rpcParams = default){
-        // Check if a point has been scored
+        // Store info on selected cubes
+        OptionsNetworkStats.InputData inputData = new OptionsNetworkStats.InputData {
+            timestamp = DateTime.UtcNow.ToString("o"),
+            selectedCube = selectedCube,
+            correctClientCube = greenCube,
+            correctServerCube = cubes[currentGreenCube.Value].name,
+        };
+            
+        // Check if a point has been scored and update if necessary
         if (selectedCube == greenCube && selectedCube == cubes[currentGreenCube.Value].name && !hasScored.Value){
             scoreboardManager.UpdatePlayerScore(rpcParams.Receive.SenderClientId);
             addOnePoint();
-            
-            OptionsNetworkStats.InputData inputData = new OptionsNetworkStats.InputData {
-                timestamp = DateTime.UtcNow.ToString("o"),
-                selectedCube = selectedCube,
-                correctClientCube = greenCube,
-                correctServerCube = cubes[currentGreenCube.Value].name,
-            };
-            optionsNetworkStats.AddClientData(inputData, rpcParams.Receive.SenderClientId);
         }
+
+        // Send info on selected cubes
+        optionsNetworkStats.AddClientData(inputData, rpcParams.Receive.SenderClientId);
     }
 }
