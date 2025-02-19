@@ -41,6 +41,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     [Serializable]
     public class InputData
     {
+        public int id;
         public string timestamp;
         public string selectedCube;
         public string correctClientCube;

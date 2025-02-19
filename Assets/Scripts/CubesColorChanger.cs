@@ -17,6 +17,7 @@ public class CubeManager : NetworkBehaviour
     public ScoreboardManager scoreboardManager;
     private int lastSelectedCubeIndex = -1;
     private NetworkVariable<int> currentGreenCube = new NetworkVariable<int>(-1);
+    private int cubeMoment = 1;
     OptionsNetworkStats optionsNetworkStats;
 
     void Start()
@@ -104,11 +105,13 @@ public class CubeManager : NetworkBehaviour
     private void RequestScoreUpdateServerRpc(string selectedCube, string greenCube, ServerRpcParams rpcParams = default){
         // Store info on selected cubes
         OptionsNetworkStats.InputData inputData = new OptionsNetworkStats.InputData {
+            id = cubeMoment,
             timestamp = DateTime.UtcNow.ToString("o"),
             selectedCube = selectedCube,
             correctClientCube = greenCube,
             correctServerCube = cubes[currentGreenCube.Value].name,
         };
+        cubeMoment++;
             
         // Check if a point has been scored and update if necessary
         if (selectedCube == greenCube && selectedCube == cubes[currentGreenCube.Value].name && !hasScored.Value){
