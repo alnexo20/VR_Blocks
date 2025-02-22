@@ -17,7 +17,6 @@ public class CubeManager : NetworkBehaviour
     public ScoreboardManager scoreboardManager;
     private int lastSelectedCubeIndex = -1;
     private NetworkVariable<int> currentGreenCube = new NetworkVariable<int>(-1);
-    private int cubeMoment = 1;
     OptionsNetworkStats optionsNetworkStats;
 
     void Start()
@@ -71,6 +70,15 @@ public class CubeManager : NetworkBehaviour
         } while(currentGreenCube.Value == lastSelectedCubeIndex);
         Renderer cubeRenderer = cubes[currentGreenCube.Value].GetComponent<Renderer>();
         cubeRenderer.material.color = Color.green;
+
+        //Create event color change
+        OptionsNetworkStats.GameData gameData = new OptionsNetworkStats.GameData {
+            timestamp = DateTime.UtcNow.ToString("o"),
+            currentGreenCube = currentGreenCube.Value,
+            lastGreenCube = lastSelectedCubeIndex,
+        };
+        optionsNetworkStats.AddGameData(gameData);
+
         ChangeCubeColorClientRpc(currentGreenCube.Value);
     }
 
@@ -94,32 +102,34 @@ public class CubeManager : NetworkBehaviour
     public void CheckCubeSelection(GameObject selectedCube)
     {
         ulong localClientId = NetworkManager.Singleton.LocalClientId;
-        //Server and other players connected cannot play
-        if ((IsServer && !IsHost) || localClientId >= 2) return;
+        //Server and other players connected cannot play || localClientId >= 2
+        if (IsServer && !IsHost) return;
 
         //if client scored call server to update score as this is not server autoritative
-        RequestScoreUpdateServerRpc(selectedCube.name, cubes[currentGreenCube.Value].name);
+        RequestScoreUpdateServerRpc(selectedCube.name, cubes[currentGreenCube.Value].name, optionsNetworkStats.GetMoment());
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestScoreUpdateServerRpc(string selectedCube, string greenCube, ServerRpcParams rpcParams = default){
+    private void RequestScoreUpdateServerRpc(string selectedCube, string greenCube, int clientMoment, ServerRpcParams rpcParams = default){
         // Store info on selected cubes
         OptionsNetworkStats.InputData inputData = new OptionsNetworkStats.InputData {
-            id = cubeMoment,
+            clientMoment = clientMoment,
+            serverMoment = optionsNetworkStats.GetMoment(),
+            player = $"Player_{rpcParams.Receive.SenderClientId+1}",
             timestamp = DateTime.UtcNow.ToString("o"),
             selectedCube = selectedCube,
             correctClientCube = greenCube,
             correctServerCube = cubes[currentGreenCube.Value].name,
         };
-        cubeMoment++;
             
         // Check if a point has been scored and update if necessary
         if (selectedCube == greenCube && selectedCube == cubes[currentGreenCube.Value].name && !hasScored.Value){
             scoreboardManager.UpdatePlayerScore(rpcParams.Receive.SenderClientId);
             addOnePoint();
+            optionsNetworkStats.AddScoresData(rpcParams.Receive.SenderClientId);
         }
 
         // Send info on selected cubes
-        optionsNetworkStats.AddClientData(inputData, rpcParams.Receive.SenderClientId);
+        optionsNetworkStats.AddClientData(inputData);
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System;
+using System.IO;
 
 public class CubeSpawner : NetworkBehaviour
 {
@@ -15,6 +16,13 @@ public class CubeSpawner : NetworkBehaviour
     public GameObject optionsMenuPrefab;
     private GameObject optionsMenu;
     public Vector3 spawnPositionOptionsMenu = Vector3.zero;
+    private string filePath;
+
+    void Start()
+    {
+        filePath = "./DebugLog.txt"; // Path for the JSON file
+        File.AppendAllText(filePath, "LOG FILE STARTS HERE");
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -25,9 +33,11 @@ public class CubeSpawner : NetworkBehaviour
     }
 
     private void OnClientConnected(ulong clientId) { 
+        File.AppendAllText(filePath, $"Client with id {clientId} connected. Total number of clients currently connected is {NetworkManager.Singleton.ConnectedClients.Count}");
         if (NetworkManager.Singleton.ConnectedClients.Count >= minPlayers) { 
+            File.AppendAllText(filePath, "Starting game. Spawning cubes.");
             SpawnCubes(); 
-        } 
+        }
     }
 
     void SpawnCubes()
