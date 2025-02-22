@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CubesColorChanger.cs" />
     <Compile Include="Assets\Scripts\ScoreboardManager.cs" />
+    <Compile Include="Assets\CountdownTimer.cs" />
     <Compile Include="Assets\MRTK-Keyboard-main\MRTK\SDK\Experimental\NonNativeKeyboard\Scripts\SymbolKeyboard.cs" />
     <Compile Include="Assets\Scripts\SceneTransitionManager.cs" />
     <Compile Include="Assets\VR Body\AnimateOnInput.cs" />

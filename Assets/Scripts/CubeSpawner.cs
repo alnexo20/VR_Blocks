@@ -17,6 +17,7 @@ public class CubeSpawner : NetworkBehaviour
     private GameObject optionsMenu;
     public Vector3 spawnPositionOptionsMenu = Vector3.zero;
     private string filePath;
+    public GameObject countdownTimer;
 
     void Start()
     {
@@ -37,6 +38,7 @@ public class CubeSpawner : NetworkBehaviour
         if (NetworkManager.Singleton.ConnectedClients.Count >= minPlayers) { 
             File.AppendAllText(filePath, "Starting game. Spawning cubes.");
             SpawnCubes(); 
+            countdownTimer.GetComponent<CountdownTimer>().StartTimer();
         }
     }
 
@@ -107,6 +109,16 @@ public class CubeSpawner : NetworkBehaviour
     public void BackToMainMenu(){
         EndGame();
         GameObject.Find("Start Menu").GetComponent<GameStartMenu>().EnableMainMenu();
+        if (IsServer){
+            BackToMainMenuClientRpc();
+        }else{
+            BackToMainMenuServerRpc();
+        }
+    }
+
+    [ServerRpc]
+    private void BackToMainMenuServerRpc()
+    {
         BackToMainMenuClientRpc();
     }
 
