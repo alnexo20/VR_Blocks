@@ -22,7 +22,7 @@ public class CubeSpawner : NetworkBehaviour
     void Start()
     {
         filePath = "./DebugLog.txt"; // Path for the JSON file
-        File.AppendAllText(filePath, "LOG FILE STARTS HERE");
+        File.AppendAllText(filePath, "---------LOG FILE STARTS HERE---------");
     }
 
     public override void OnNetworkSpawn()
@@ -103,6 +103,7 @@ public class CubeSpawner : NetworkBehaviour
     public override void OnDestroy() { 
         if (NetworkManager.Singleton != null) { 
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected; 
+            File.AppendAllText(filePath, $"Client disconnected. Total number of clients currently connected is {NetworkManager.Singleton.ConnectedClients.Count}");
         } 
     }
 
@@ -167,6 +168,7 @@ public class CubeSpawner : NetworkBehaviour
 
     private void EndGame()
     {
+        File.AppendAllText(filePath, $"Game ended. Player 1 score: {scoreboard.GetComponent<ScoreboardManager>().getScores()[0]}. Player 2 score: {scoreboard.GetComponent<ScoreboardManager>().getScores()[1]}");
         // ServerRpc is not called if server or host is the one executing this function
         if (IsServer || IsHost){
             if (cubes != null)
@@ -208,6 +210,7 @@ public class CubeSpawner : NetworkBehaviour
 
     public void WinnerScreen(string WinnerText)
     {
+        File.AppendAllText(filePath, $"{WinnerText}");
         EndGame();
         WinnerScreenClientRpc(WinnerText);
 
