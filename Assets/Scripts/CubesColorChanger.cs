@@ -115,7 +115,7 @@ public class CubeManager : NetworkBehaviour
         OptionsNetworkStats.InputData inputData = new OptionsNetworkStats.InputData {
             clientMoment = clientMoment,
             serverMoment = optionsNetworkStats.GetMoment(),
-            player = $"Player_{rpcParams.Receive.SenderClientId+1}",
+            player = $"Player_{rpcParams.Receive.SenderClientId}",
             timestamp = DateTime.UtcNow.ToString("o"),
             selectedCube = selectedCube,
             correctClientCube = greenCube,

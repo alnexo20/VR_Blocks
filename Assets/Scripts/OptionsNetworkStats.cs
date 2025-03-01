@@ -128,7 +128,7 @@ public class OptionsNetworkStats : NetworkBehaviour
                     CalculateJitter(clientId);
 
                     // Store calculated values
-                    string clientKey = $"Player_{clientId+1}";
+                    string clientKey = $"Player_{clientId}";
                     currentTimestamp = DateTime.UtcNow.ToString("o");
 
                     networkStats.pings[currentTimestamp] = new Dictionary<string, ClientStats>();
@@ -174,7 +174,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     public void AddScoresData(ulong clientId){
         ScoresData scoresData = new ScoresData {
             timestamp = DateTime.UtcNow.ToString("o"),
-            playerWhoScored = $"Player_{clientId+1}",
+            playerWhoScored = $"Player_{clientId}",
             player1Points = scoreboardManager.getScores()[0],
             player2Points = scoreboardManager.getScores()[1],
         };
