@@ -18,7 +18,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     // private Dictionary<ulong, int> sentPackets = new Dictionary<ulong, int>();
     // private Dictionary<ulong, int> receivedPackets = new Dictionary<ulong, int>();
     private Dictionary<ulong, List<float>> packetDelays = new Dictionary<ulong, List<float>>();
-    private int moment;
+    private NetworkVariable<int> moment = new NetworkVariable<int>(0);
     private string filePath;
     private string currentTimestamp;
     private const long MaxFileSize = 50 * 1024 * 1024; // 50 MB size limit
@@ -100,7 +100,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         // Initialize dictionaries for each connected client
         foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
         {
-            moment = 0;
+            moment.Value = 0;
             latencies[clientId] = 0f;
             // packetLosses[clientId] = 0f;
             jitters[clientId] = 0f;
@@ -230,12 +230,12 @@ public class OptionsNetworkStats : NetworkBehaviour
         GameObject.Find("Cube Spawner").GetComponent<CubeSpawner>().BackToMainMenu();
     }
 
-    public int SetMoment(int newMoment){
-        moment = newMoment;
-        return moment;
+    public int NextMoment(){
+        moment.Value++;
+        return moment.Value;
     }
 
     public int GetMoment(){
-        return moment;
+        return moment.Value;
     }
 }

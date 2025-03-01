@@ -96,6 +96,8 @@ public class CubeManager : NetworkBehaviour
         ResetCubeColors();
         ChangeCubeColorToGreen();
         changeTimer = changeInterval;
+        // Pass to next moment
+        optionsNetworkStats.NextMoment();
         hasScored.Value = false; // Reset the flag when the color changes
     }
 
