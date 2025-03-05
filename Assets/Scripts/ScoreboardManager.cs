@@ -12,7 +12,7 @@ public class ScoreboardManager : NetworkBehaviour
     public TextMeshProUGUI winnerText; // TextMeshPro Text to display the winner
     public NetworkVariable<int> player1Score = new NetworkVariable<int>(0); 
     public NetworkVariable<int> player2Score = new NetworkVariable<int>(0);
-    private int maxScore = 30;
+    private int maxScore = 60;
     CubeSpawner cubeSpawner;
     OptionsNetworkStats optionsNetworkStats;
 
@@ -70,7 +70,7 @@ public class ScoreboardManager : NetworkBehaviour
 
         UpdateScoreText();
         
-        if (player1Score.Value >= maxScore || player2Score.Value >= maxScore) { 
+        if (player1Score.Value + player2Score.Value >= maxScore) { 
             // if (optionsNetworkStats != null){
             //     optionsNetworkStats.FinalScore();
             // }
