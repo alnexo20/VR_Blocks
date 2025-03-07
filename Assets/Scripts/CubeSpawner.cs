@@ -22,7 +22,7 @@ public class CubeSpawner : NetworkBehaviour
     void Start()
     {
         filePath = "./DebugLog.txt"; // Path for the JSON file
-        File.AppendAllText(filePath, "---------LOG FILE STARTS HERE---------");
+        File.AppendAllText(filePath, "---------LOG FILE STARTS HERE---------\n");
     }
 
     public override void OnNetworkSpawn()
@@ -34,9 +34,9 @@ public class CubeSpawner : NetworkBehaviour
     }
 
     private void OnClientConnected(ulong clientId) { 
-        File.AppendAllText(filePath, $"Client with id {clientId} connected. Total number of clients currently connected is {NetworkManager.Singleton.ConnectedClients.Count}");
+        File.AppendAllText(filePath, $"Client with id {clientId} connected. Total number of clients currently connected is {NetworkManager.Singleton.ConnectedClients.Count}\n");
         if (NetworkManager.Singleton.ConnectedClients.Count >= minPlayers) { 
-            File.AppendAllText(filePath, "Starting game. Spawning cubes.");
+            File.AppendAllText(filePath, "Starting game. Spawning cubes.\n");
             SpawnCubes(); 
             countdownTimer.GetComponent<CountdownTimer>().StartTimer();
         }
@@ -103,13 +103,19 @@ public class CubeSpawner : NetworkBehaviour
     public override void OnDestroy() { 
         if (NetworkManager.Singleton != null) { 
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected; 
-            File.AppendAllText(filePath, $"Client disconnected. Total number of clients currently connected is {NetworkManager.Singleton.ConnectedClients.Count}");
+            File.AppendAllText(filePath, $"Client disconnected. Total number of clients currently connected is {NetworkManager.Singleton.ConnectedClients.Count}\n");
         } 
     }
 
     public void BackToMainMenu(){
         EndGame();
-        GameObject.Find("Start Menu").GetComponent<GameStartMenu>().EnableMainMenu();
+        GameObject startMenu = GameObject.Find("Start Menu");
+        if (startMenu){
+            startMenu.GetComponent<GameStartMenu>().EnableMainMenu();
+        }else{
+            File.AppendAllText(filePath, "ERROR: Start Menu not found\n");
+        }
+
         if (IsServer){
             BackToMainMenuClientRpc();
         }else{
@@ -168,7 +174,8 @@ public class CubeSpawner : NetworkBehaviour
 
     private void EndGame()
     {
-        File.AppendAllText(filePath, $"Game ended. Player 1 score: {scoreboard.GetComponent<ScoreboardManager>().getScores()[0]}. Player 2 score: {scoreboard.GetComponent<ScoreboardManager>().getScores()[1]}");
+        File.AppendAllText(filePath, $"Game ended. Player 1 score: {scoreboard.GetComponent<ScoreboardManager>().getScores()[0]}. Player 2 score: {scoreboard.GetComponent<ScoreboardManager>().getScores()[1]}\n");
+        optionsMenu.GetComponent<OptionsNetworkStats>().UpdateStatsFile();
         // ServerRpc is not called if server or host is the one executing this function
         if (IsServer || IsHost){
             if (cubes != null)

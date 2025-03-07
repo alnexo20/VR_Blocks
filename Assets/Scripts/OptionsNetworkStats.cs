@@ -20,6 +20,7 @@ public class OptionsNetworkStats : NetworkBehaviour
     private Dictionary<ulong, List<float>> packetDelays = new Dictionary<ulong, List<float>>();
     private NetworkVariable<int> moment = new NetworkVariable<int>(0);
     private string filePath;
+    private string filePathDebug = "./DebugLog.txt";
     private string currentTimestamp;
     private const long MaxFileSize = 50 * 1024 * 1024; // 50 MB size limit
     ScoreboardManager scoreboardManager;
@@ -120,7 +121,8 @@ public class OptionsNetworkStats : NetworkBehaviour
                 // Each connected client will answer this, so we are sending as many packets/calls as clients and not 1 packet
                 SendPingClientRpc();
 
-                foreach (var clientId in NetworkManager.ConnectedClients.Keys)
+                // NetworkManager.ConnectedClients.Keys
+                foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
                 {
                     // sentPackets[clientId]++;
                     latencies[clientId] = NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetCurrentRtt(clientId);
@@ -138,11 +140,8 @@ public class OptionsNetworkStats : NetworkBehaviour
                     clientStats.latency = $"{latencies[clientId]}ms";
                     clientStats.jitter = $"{jitters[clientId]}ms";
                 }
-
-                // Write in JSON file
-                UpdateStatsFile();
                 
-                yield return new WaitForSeconds(1/3); // Wait 33ms for next call
+                yield return new WaitForSeconds(0); 
             }
         }
     }
@@ -202,7 +201,7 @@ public class OptionsNetworkStats : NetworkBehaviour
         previousLatencies[clientId] = latencies[clientId];
     }
 
-    private void UpdateStatsFile()
+    public void UpdateStatsFile()
     {
         if (filePath == ""){
             throw new FileNotFoundException("filepath for networkStats is: "+filePath);
@@ -227,7 +226,13 @@ public class OptionsNetworkStats : NetworkBehaviour
     }
 
     public void BackToMainMenu(){
-        GameObject.Find("Cube Spawner").GetComponent<CubeSpawner>().BackToMainMenu();
+        GameObject cubeSpawner = GameObject.Find("Cube Spawner");
+        if (cubeSpawner){
+            cubeSpawner.GetComponent<CubeSpawner>().BackToMainMenu();
+        }else{
+            // not found
+            File.WriteAllText(filePathDebug, "ERROR: Not able to find Cube Spawner\n");
+        }
     }
 
     public int NextMoment(){

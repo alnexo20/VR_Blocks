@@ -1,1 +1,6 @@
-LOG FILE STARTS HEREClient with id 0 connected. Total number of clients currently connected is 1
+LOG FILE STARTS HEREClient with id 0 connected. Total number of clients currently connected is 1---------LOG FILE STARTS HERE---------
+Client with id 0 connected. Total number of clients currently connected is 1
+---------LOG FILE STARTS HERE---------
+Client with id 0 connected. Total number of clients currently connected is 1
+---------LOG FILE STARTS HERE---------
+Client with id 0 connected. Total number of clients currently connected is 1

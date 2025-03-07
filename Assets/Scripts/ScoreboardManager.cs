@@ -82,13 +82,16 @@ public class ScoreboardManager : NetworkBehaviour
     {
         //if (optionsNetworkStats != null) optionsNetworkStats.FinalScore();
 
-        if (player1Score.Value >= maxScore)
+        if (player1Score.Value > player2Score.Value)
         {
             cubeSpawner.WinnerScreen("Player 1 Wins!");
         }
-        else if (player2Score.Value >= maxScore)
+        else if (player2Score.Value > player1Score.Value)
         {
             cubeSpawner.WinnerScreen("Player 2 Wins!");
+        }
+        else{
+            cubeSpawner.WinnerScreen("   Draw!");
         }
     }
 }

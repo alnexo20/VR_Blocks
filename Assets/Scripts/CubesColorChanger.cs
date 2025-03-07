@@ -65,6 +65,7 @@ public class CubeManager : NetworkBehaviour
     void ChangeCubeColorToGreen()
     {
         // This implementation is not really efficient but probability of repeating same number more than 5 times is <<<
+        lastSelectedCubeIndex = currentGreenCube.Value;
         do{
             currentGreenCube.Value = UnityEngine.Random.Range(0, cubes.Length);
         } while(currentGreenCube.Value == lastSelectedCubeIndex);
@@ -114,9 +115,10 @@ public class CubeManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void RequestScoreUpdateServerRpc(string selectedCube, string greenCube, int clientMoment, ServerRpcParams rpcParams = default){
         // Store info on selected cubes
+        int serverMoment = optionsNetworkStats.GetMoment();
         OptionsNetworkStats.InputData inputData = new OptionsNetworkStats.InputData {
             clientMoment = clientMoment,
-            serverMoment = optionsNetworkStats.GetMoment(),
+            serverMoment = serverMoment,
             player = $"Player_{rpcParams.Receive.SenderClientId}",
             timestamp = DateTime.UtcNow.ToString("o"),
             selectedCube = selectedCube,
@@ -125,7 +127,7 @@ public class CubeManager : NetworkBehaviour
         };
             
         // Check if a point has been scored and update if necessary
-        if (selectedCube == greenCube && selectedCube == cubes[currentGreenCube.Value].name && !hasScored.Value){
+        if (selectedCube == greenCube && selectedCube == cubes[currentGreenCube.Value].name && !hasScored.Value && clientMoment == serverMoment){
             scoreboardManager.UpdatePlayerScore(rpcParams.Receive.SenderClientId);
             addOnePoint();
             optionsNetworkStats.AddScoresData(rpcParams.Receive.SenderClientId);
